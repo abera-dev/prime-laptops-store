@@ -1,4 +1,4 @@
-# 💻 LaptopMall — Multi-Brand Laptop E-Commerce Platform
+# 💻 Prime-laptops-store  — Multi-Brand Laptop E-Commerce Platform
 
 A production-ready full-stack web application built with **React**, **Node.js/Express**, and **PostgreSQL**.
 
@@ -67,14 +67,7 @@ npm start
 
 ---
 
-## 🔐 Demo Credentials
 
-| Role     | Email                    | Password    |
-|----------|--------------------------|-------------|
-| Admin    | admin@laptopmall.com     | admin123    |
-| Customer | jane@example.com         | admin123    |
-
-> ⚠️ Change these passwords before any production deployment.
 
 ---
 
