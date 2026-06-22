@@ -23,7 +23,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl">💻</span>
             <span className="font-display text-2xl font-extrabold uppercase text-slate-50">
-              Laptop<span className="text-cyan">Mall</span>
+              Prime<span className="text-cyan">Laptops</span>
             </span>
           </Link>
 
