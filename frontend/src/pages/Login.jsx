@@ -28,7 +28,7 @@ export default function Login() {
       <div className="card w-full max-w-md p-8">
         <div className="text-center mb-8">
           <span className="text-4xl">💻</span>
-          <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50 mt-2">Sign in to LaptopMall</h1>
+          <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50 mt-2">Sign in to Prime Laptops</h1>
           <p className="text-slate-400 text-sm mt-1">Welcome back!</p>
         </div>
 
@@ -53,10 +53,7 @@ export default function Login() {
           <Link to="/register" className="text-cyan font-semibold hover:underline">Create one</Link>
         </p>
 
-        {/* Demo credentials hint */}
-        <div className="mt-4 rounded-lg border border-cyan/20 bg-cyan/10 p-3 font-mono text-xs text-cyan">
-          <strong>Demo:</strong> admin@laptopmall.com / admin123
-        </div>
+      
       </div>
     </div>
   );

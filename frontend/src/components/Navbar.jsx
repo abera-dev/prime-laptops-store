@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 
-export default function Navbar() {
+export default function Navbar({ theme, onToggleTheme }) {
   const { user, logout } = useAuth();
   const { itemCount }    = useCart();
   const navigate         = useNavigate();
@@ -69,6 +69,26 @@ export default function Navbar() {
                 <Link to="/register" className="btn-primary text-sm py-1.5 px-4">Register</Link>
               </div>
             )}
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className="theme-toggle"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-pressed={theme === 'light'}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              <span className="sr-only">Toggle color theme</span>
+              {theme === 'dark' ? (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path strokeLinecap="round" d="M12 2.5v2.2M12 19.3v2.2M4.58 4.58l1.55 1.55M17.87 17.87l1.55 1.55M2.5 12h2.2M19.3 12h2.2M4.58 19.42l1.55-1.55M17.87 6.13l1.55-1.55" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 14.5A8.5 8.5 0 119.5 3 6.8 6.8 0 0021 14.5z" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </div>

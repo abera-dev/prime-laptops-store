@@ -3,11 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1d4ed8" />
+    <meta name="theme-color" content="#07090f" />
     <meta name="description" content="Multi-Brand Laptop E-Commerce Platform — Dell, HP, Lenovo, Apple, ASUS, Acer" />
-    <title>LaptopMall — Premium Laptops Online</title>
+    <title>Prime Laptops — Premium Laptops Online</title>
   </head>
   <body>
+    <script>
+      (function () {
+        try {
+          var theme = window.localStorage.getItem('theme') || 'dark';
+          document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+          document.documentElement.style.colorScheme = theme === 'light' ? 'light' : 'dark';
+        } catch (error) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      }());
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
