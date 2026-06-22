@@ -25,19 +25,19 @@ export default function Register() {
 
   const field = (key, label, type = 'text', placeholder = '') => (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
       <input type={type} required className="input" placeholder={placeholder}
         value={form[key]} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))} />
     </div>
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="card w-full max-w-md p-8">
         <div className="text-center mb-8">
           <span className="text-4xl">💻</span>
-          <h1 className="text-2xl font-bold text-gray-900 mt-2">Create your account</h1>
-          <p className="text-gray-500 text-sm mt-1">Join LaptopMall today</p>
+          <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50 mt-2">Create your account</h1>
+          <p className="text-slate-400 text-sm mt-1">Join LaptopMall today</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -50,9 +50,9 @@ export default function Register() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-slate-400 mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 font-semibold hover:underline">Sign in</Link>
+          <Link to="/login" className="text-cyan font-semibold hover:underline">Sign in</Link>
         </p>
       </div>
     </div>

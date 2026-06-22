@@ -47,13 +47,13 @@ export default function Products() {
         <aside className="w-full lg:w-64 flex-shrink-0">
           <div className="card p-5 sticky top-20">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="font-bold text-gray-900">Filters</h2>
-              <button onClick={clearFilters} className="text-xs text-blue-600 hover:underline">Clear all</button>
+              <h2 className="font-display text-2xl font-bold uppercase text-slate-50">Filters</h2>
+              <button onClick={clearFilters} className="text-xs text-cyan hover:underline">Clear all</button>
             </div>
 
             {/* Search */}
             <div className="mb-5">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Search</label>
+              <label className="font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">Search</label>
               <input
                 type="text"
                 className="input mt-1"
@@ -65,14 +65,14 @@ export default function Products() {
 
             {/* Brand */}
             <div className="mb-5">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Brand</label>
+              <label className="font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">Brand</label>
               <div className="mt-2 space-y-1">
                 {BRANDS.map(b => (
                   <button
                     key={b}
                     onClick={() => handleFilter('brand', b)}
                     className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                      filters.brand === b ? 'bg-blue-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-700'
+                      filters.brand === b ? 'bg-electric text-white font-semibold shadow-lg shadow-electric/20' : 'text-slate-300 hover:bg-white/10 hover:text-cyan'
                     }`}
                   >
                     {b}
@@ -83,14 +83,14 @@ export default function Products() {
 
             {/* RAM */}
             <div className="mb-5">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Min RAM</label>
+              <label className="font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">Min RAM</label>
               <div className="mt-2 flex flex-wrap gap-2">
                 {RAM_OPTIONS.map(r => (
                   <button
                     key={r}
                     onClick={() => handleFilter('ram_gb', String(r))}
                     className={`px-3 py-1 rounded-full text-sm border transition-colors ${
-                      filters.ram_gb === String(r) ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-700 hover:border-blue-400'
+                      filters.ram_gb === String(r) ? 'bg-electric text-white border-electric' : 'border-white/10 text-slate-300 hover:border-cyan/50 hover:text-cyan'
                     }`}
                   >
                     {r}GB+
@@ -101,7 +101,7 @@ export default function Products() {
 
             {/* Max Price */}
             <div>
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Max Price</label>
+              <label className="font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">Max Price</label>
               <input
                 type="number"
                 className="input mt-1"
@@ -116,28 +116,28 @@ export default function Products() {
         {/* Product Grid */}
         <main className="flex-1">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50">
               {filters.brand ? `${filters.brand} Laptops` : 'All Laptops'}
             </h1>
-            <span className="text-sm text-gray-500">{products.length} products</span>
+            <span className="font-mono text-sm text-slate-500">{products.length} products</span>
           </div>
 
           {loading ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="card animate-pulse">
-                  <div className="bg-gray-200 h-48 w-full" />
+                  <div className="bg-white/10 h-48 w-full" />
                   <div className="p-4 space-y-2">
-                    <div className="bg-gray-200 h-4 rounded w-3/4" />
-                    <div className="bg-gray-200 h-3 rounded w-1/2" />
-                    <div className="bg-gray-200 h-8 rounded mt-4" />
+                    <div className="bg-white/10 h-4 rounded w-3/4" />
+                    <div className="bg-white/10 h-3 rounded w-1/2" />
+                    <div className="bg-white/10 h-8 rounded mt-4" />
                   </div>
                 </div>
               ))}
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-400 text-lg">No products match your filters.</p>
+              <p className="text-slate-400 text-lg">No products match your filters.</p>
               <button onClick={clearFilters} className="btn-primary mt-4">Clear Filters</button>
             </div>
           ) : (

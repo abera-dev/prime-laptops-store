@@ -19,7 +19,18 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: 'rgba(13, 19, 32, 0.94)',
+                border: '1px solid rgba(32, 240, 255, 0.18)',
+                color: '#e2e8f0',
+                boxShadow: '0 18px 50px rgba(0, 0, 0, 0.35)',
+              },
+            }}
+          />
           <div className="min-h-screen flex flex-col">
             <Navbar />
             <main className="flex-1">
@@ -34,8 +45,8 @@ export default function App() {
                 <Route path="/admin"        element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               </Routes>
             </main>
-            <footer className="bg-gray-900 text-gray-400 text-center py-6 text-sm mt-auto">
-              © 2024 LaptopMall — All rights reserved.
+            <footer className="border-t border-white/10 bg-night/80 py-6 text-center font-mono text-xs text-slate-500 mt-auto backdrop-blur">
+              © 2024 LaptopMall / All rights reserved.
             </footer>
           </div>
         </CartProvider>

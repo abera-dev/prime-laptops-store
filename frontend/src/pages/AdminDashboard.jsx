@@ -67,20 +67,26 @@ export default function AdminDashboard() {
   };
 
   const statCards = stats ? [
-    { label: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, icon: '💰', color: 'bg-green-50 text-green-700' },
-    { label: 'Total Orders',  value: stats.totalOrders,  icon: '📦', color: 'bg-blue-50 text-blue-700' },
-    { label: 'Products',      value: stats.totalProducts, icon: '💻', color: 'bg-purple-50 text-purple-700' },
-    { label: 'Customers',     value: stats.totalCustomers,icon: '👥', color: 'bg-orange-50 text-orange-700' },
+    { label: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, icon: '💰', color: 'border-emerald-300/20 bg-emerald-400/10 text-emerald-200' },
+    { label: 'Total Orders',  value: stats.totalOrders,  icon: '📦', color: 'border-cyan/20 bg-cyan/10 text-cyan' },
+    { label: 'Products',      value: stats.totalProducts, icon: '💻', color: 'border-electric/20 bg-electric/15 text-sky-200' },
+    { label: 'Customers',     value: stats.totalCustomers,icon: '👥', color: 'border-amber-300/20 bg-amber-400/10 text-amber-200' },
   ] : [];
 
-  const statusColors = { Pending:'bg-yellow-100 text-yellow-700', Processing:'bg-blue-100 text-blue-700', Shipped:'bg-indigo-100 text-indigo-700', Delivered:'bg-green-100 text-green-700', Cancelled:'bg-red-100 text-red-700' };
+  const statusColors = {
+    Pending:'border-amber-300/40 bg-amber-400/10 text-amber-200',
+    Processing:'border-cyan/40 bg-cyan/10 text-cyan',
+    Shipped:'border-electric/40 bg-electric/15 text-sky-200',
+    Delivered:'border-emerald-300/40 bg-emerald-400/10 text-emerald-200',
+    Cancelled:'border-rose-400/40 bg-rose-500/10 text-rose-200'
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-500 text-sm">Manage products, orders, and inventory</p>
+          <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50">Admin Dashboard</h1>
+          <p className="text-slate-400 text-sm">Manage products, orders, and inventory</p>
         </div>
       </div>
 
@@ -98,10 +104,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 border-b border-gray-200">
+      <div className="flex gap-1 mb-6 border-b border-white/10">
         {['products', 'orders'].map(t => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-5 py-2.5 text-sm font-semibold capitalize border-b-2 transition-colors ${tab === t ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
+            className={`px-5 py-2.5 text-sm font-semibold capitalize border-b-2 transition-colors ${tab === t ? 'border-cyan text-cyan' : 'border-transparent text-slate-500 hover:text-slate-200'}`}>
             {t} {t === 'products' ? `(${products.length})` : `(${orders.length})`}
           </button>
         ))}
@@ -116,26 +122,26 @@ export default function AdminDashboard() {
 
           <div className="card overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-white/[0.04] border-b border-white/10">
                 <tr>
                   {['Image','Name','Brand','Price','RAM','Storage','Stock','Actions'].map(h => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                    <th key={h} className="text-left px-4 py-3 font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-white/10">
                 {products.map(p => (
-                  <tr key={p.id} className="hover:bg-gray-50">
+                  <tr key={p.id} className="hover:bg-white/[0.04]">
                     <td className="px-4 py-3">
                       <img src={p.image} alt={p.name} className="w-14 h-10 object-cover rounded" onError={e=>e.target.src='https://via.placeholder.com/56x40?text=Img'} />
                     </td>
-                    <td className="px-4 py-3 font-medium text-gray-900 max-w-xs truncate">{p.name}</td>
-                    <td className="px-4 py-3 text-gray-600">{p.brand}</td>
-                    <td className="px-4 py-3 font-semibold text-blue-700">${Number(p.price).toLocaleString()}</td>
-                    <td className="px-4 py-3 text-gray-600">{p.ram_gb}GB</td>
-                    <td className="px-4 py-3 text-gray-600">{p.storage_gb}GB</td>
+                    <td className="px-4 py-3 font-medium text-slate-100 max-w-xs truncate">{p.name}</td>
+                    <td className="px-4 py-3 text-slate-400">{p.brand}</td>
+                    <td className="px-4 py-3 tech-price">${Number(p.price).toLocaleString()}</td>
+                    <td className="px-4 py-3 font-mono text-slate-400">{p.ram_gb}GB</td>
+                    <td className="px-4 py-3 font-mono text-slate-400">{p.storage_gb}GB</td>
                     <td className="px-4 py-3">
-                      <span className={`badge ${p.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      <span className={`badge ${p.stock > 0 ? 'border-emerald-300/40 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/40 bg-rose-500/10 text-rose-200'}`}>
                         {p.stock}
                       </span>
                     </td>
@@ -157,29 +163,29 @@ export default function AdminDashboard() {
       {tab === 'orders' && (
         <div className="card overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-white/[0.04] border-b border-white/10">
               <tr>
                 {['Order ID','Customer','Total','Status','Date','Update Status'].map(h => (
-                  <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                  <th key={h} className="text-left px-4 py-3 font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-white/10">
               {orders.map(o => (
-                <tr key={o.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-gray-700">#{o.id}</td>
+                <tr key={o.id} className="hover:bg-white/[0.04]">
+                  <td className="px-4 py-3 font-mono text-slate-300">#{o.id}</td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-gray-900">{o.customer_name || 'Unknown'}</p>
-                    <p className="text-xs text-gray-400">{o.customer_email}</p>
+                    <p className="font-medium text-slate-100">{o.customer_name || 'Unknown'}</p>
+                    <p className="text-xs text-slate-500">{o.customer_email}</p>
                   </td>
-                  <td className="px-4 py-3 font-bold text-blue-700">${Number(o.total_price).toLocaleString()}</td>
+                  <td className="px-4 py-3 tech-price">${Number(o.total_price).toLocaleString()}</td>
                   <td className="px-4 py-3">
-                    <span className={`badge ${statusColors[o.status] || 'bg-gray-100 text-gray-600'}`}>{o.status}</span>
+                    <span className={`badge ${statusColors[o.status] || ''}`}>{o.status}</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">{new Date(o.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-slate-500 text-xs">{new Date(o.created_at).toLocaleDateString()}</td>
                   <td className="px-4 py-3">
                     <select value={o.status} onChange={e => handleStatusChange(o.id, e.target.value)}
-                      className="text-xs border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                      className="rounded-lg border border-white/10 bg-panel px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan">
                       {['Pending','Processing','Shipped','Delivered','Cancelled'].map(s => (
                         <option key={s}>{s}</option>
                       ))}
@@ -194,49 +200,49 @@ export default function AdminDashboard() {
 
       {/* Product Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-screen overflow-y-auto shadow-2xl">
-            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-900">{editProd ? 'Edit Product' : 'Add New Product'}</h2>
-              <button onClick={() => setShowF(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="card w-full max-w-2xl max-h-screen overflow-y-auto">
+            <div className="p-6 border-b border-white/10 flex justify-between items-center">
+              <h2 className="font-display text-3xl font-bold uppercase text-slate-50">{editProd ? 'Edit Product' : 'Add New Product'}</h2>
+              <button onClick={() => setShowF(false)} className="text-slate-400 hover:text-cyan text-2xl">×</button>
             </div>
             <form onSubmit={handleSave} className="p-6 grid grid-cols-2 gap-4">
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Product Name</label>
                 <input required className="input" placeholder="e.g. Dell XPS 15 9530" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Brand</label>
                 <select className="input" value={form.brand} onChange={e => setForm(p => ({ ...p, brand: e.target.value }))}>
                   {BRANDS.map(b => <option key={b}>{b}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Price ($)</label>
                 <input type="number" required min="0" step="0.01" className="input" placeholder="1299.99" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} />
               </div>
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">CPU</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">CPU</label>
                 <input required className="input" placeholder="Intel Core i7-13700H" value={form.cpu} onChange={e => setForm(p => ({ ...p, cpu: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">RAM (GB)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">RAM (GB)</label>
                 <input type="number" required min="1" className="input" placeholder="16" value={form.ram_gb} onChange={e => setForm(p => ({ ...p, ram_gb: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Storage (GB)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Storage (GB)</label>
                 <input type="number" required min="1" className="input" placeholder="512" value={form.storage_gb} onChange={e => setForm(p => ({ ...p, storage_gb: e.target.value }))} />
               </div>
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">GPU</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">GPU</label>
                 <input required className="input" placeholder="NVIDIA GeForce RTX 4060" value={form.gpu} onChange={e => setForm(p => ({ ...p, gpu: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Stock</label>
                 <input type="number" required min="0" className="input" placeholder="25" value={form.stock} onChange={e => setForm(p => ({ ...p, stock: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Image URL</label>
                 <input required className="input" placeholder="https://..." value={form.image} onChange={e => setForm(p => ({ ...p, image: e.target.value }))} />
               </div>
               <div className="col-span-2 flex gap-3 pt-2">

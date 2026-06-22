@@ -24,22 +24,22 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="card w-full max-w-md p-8">
         <div className="text-center mb-8">
           <span className="text-4xl">💻</span>
-          <h1 className="text-2xl font-bold text-gray-900 mt-2">Sign in to LaptopMall</h1>
-          <p className="text-gray-500 text-sm mt-1">Welcome back!</p>
+          <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50 mt-2">Sign in to LaptopMall</h1>
+          <p className="text-slate-400 text-sm mt-1">Welcome back!</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
             <input type="email" required className="input" placeholder="you@example.com"
               value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
             <input type="password" required className="input" placeholder="••••••"
               value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} />
           </div>
@@ -48,13 +48,13 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-slate-400 mt-6">
           Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 font-semibold hover:underline">Create one</Link>
+          <Link to="/register" className="text-cyan font-semibold hover:underline">Create one</Link>
         </p>
 
         {/* Demo credentials hint */}
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-700">
+        <div className="mt-4 rounded-lg border border-cyan/20 bg-cyan/10 p-3 font-mono text-xs text-cyan">
           <strong>Demo:</strong> admin@laptopmall.com / admin123
         </div>
       </div>
