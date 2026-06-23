@@ -37,11 +37,11 @@ export default function Register() {
         <div className="text-center mb-8">
           <span className="text-4xl">💻</span>
           <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50 mt-2">Create your account</h1>
-          <p className="text-slate-400 text-sm mt-1">Join LaptopMall today</p>
+          <p className="text-slate-400 text-sm mt-1">Join PrimeLaptops today</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {field('name', 'Full Name', 'text', 'John Doe')}
+          {field('name', 'Full Name', 'text', 'Abera Hagazi')}
           {field('email', 'Email', 'email', 'you@example.com')}
           {field('password', 'Password', 'password', '••••••')}
           {field('confirm', 'Confirm Password', 'password', '••••••')}

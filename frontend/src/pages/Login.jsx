@@ -35,12 +35,12 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
-            <input type="email" required className="input" placeholder="you@example.com"
+            <input type="email" required className="input" 
               value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
-            <input type="password" required className="input" placeholder="••••••"
+            <input type="password" required className="input" 
               value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} />
           </div>
           <button type="submit" disabled={loading} className="btn-primary w-full py-2.5">

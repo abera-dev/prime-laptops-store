@@ -163,7 +163,7 @@ export default function Products() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),300px))] justify-start gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="card animate-pulse">
                   <div className="bg-white/10 h-48 w-full" />
@@ -181,7 +181,7 @@ export default function Products() {
               <button onClick={clearFilters} className="btn-primary mt-4">Clear Filters</button>
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),300px))] justify-start gap-6">
               {products.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
           )}
