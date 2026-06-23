@@ -33,7 +33,11 @@ function ProductCard({ product }) {
   return (
     <div className="card group flex min-h-[382px] flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
       {/* Image */}
-      <div className="relative overflow-hidden bg-white/[0.03] h-48">
+      <Link
+        to={`/products/${product.id}`}
+        className="relative block h-48 overflow-hidden bg-white/[0.03]"
+        aria-label={`View specifications for ${product.name}`}
+      >
         <img
           src={product.image}
           alt={product.name}
@@ -48,7 +52,7 @@ function ProductCard({ product }) {
             <span className="text-white font-bold text-sm bg-rose-600 px-3 py-1 rounded-full">Out of Stock</span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
