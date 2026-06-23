@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
-export default function ProductCard({ product }) {
+function ProductCard({ product }) {
   const { addToCart } = useCart();
   const { user }      = useAuth();
 
@@ -30,7 +31,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="card group flex flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
+    <div className="card group flex min-h-[382px] flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
       {/* Image */}
       <div className="relative overflow-hidden bg-white/[0.03] h-48">
         <img
@@ -87,3 +88,5 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
+
+export default memo(ProductCard);

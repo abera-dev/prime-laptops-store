@@ -7,10 +7,13 @@
 @layer base {
   html {
     @apply bg-night;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
   }
 
   body {
     @apply min-h-screen bg-night font-body text-slate-100 antialiased;
+    width: 100%;
     background:
       radial-gradient(circle at 16% 10%, rgba(29, 127, 255, 0.28), transparent 30rem),
       radial-gradient(circle at 86% 14%, rgba(32, 240, 255, 0.18), transparent 28rem),
