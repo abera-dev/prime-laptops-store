@@ -69,7 +69,7 @@ export default function App() {
               </Routes>
             </main>
             <footer className="border-t border-white/10 bg-night/80 py-6 text-center font-mono text-xs text-slate-500 mt-auto backdrop-blur">
-              © 2026 Prime laptops / All rights reserved.
+              © 2026 Prime laptops  All rights reserved.
             </footer>
           </div>
         </CartProvider>
