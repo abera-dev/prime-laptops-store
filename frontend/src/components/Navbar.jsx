@@ -32,9 +32,14 @@ export default function Navbar({ theme, onToggleTheme }) {
             <Link to="/" className="hover:text-cyan transition-colors">Home</Link>
             <Link to="/products" className="hover:text-cyan transition-colors">Shop</Link>
             {user?.role === 'admin' && (
-              <Link to="/admin" className="text-cyan hover:text-white transition-colors font-semibold">
-                Admin Panel
-              </Link>
+              <>
+                <Link to="/admin" className="text-cyan hover:text-white transition-colors font-semibold">
+                  Admin Panel
+                </Link>
+                <Link to="/admin/settings" className="hover:text-cyan transition-colors">
+                  Settings
+                </Link>
+              </>
             )}
           </div>
 

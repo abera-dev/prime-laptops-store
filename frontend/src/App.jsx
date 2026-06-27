@@ -14,6 +14,7 @@ import Orders        from './pages/Orders';
 import Login         from './pages/Login';
 import Register      from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminSettings from './pages/AdminSettings';
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -66,6 +67,7 @@ export default function App() {
                 <Route path="/cart"         element={<ProtectedRoute><Cart /></ProtectedRoute>} />
                 <Route path="/orders"       element={<ProtectedRoute><Orders /></ProtectedRoute>} />
                 <Route path="/admin"        element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                <Route path="/admin/settings" element={<AdminRoute><AdminSettings theme={theme} onToggleTheme={toggleTheme} /></AdminRoute>} />
               </Routes>
             </main>
             <footer className="border-t border-white/10 bg-night/80 py-6 text-center font-mono text-xs text-slate-500 mt-auto backdrop-blur">

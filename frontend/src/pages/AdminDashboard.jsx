@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
 
@@ -88,6 +89,7 @@ export default function AdminDashboard() {
           <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50">Admin Dashboard</h1>
           <p className="text-slate-400 text-sm">Manage products, orders, and inventory</p>
         </div>
+        <Link to="/admin/settings" className="btn-secondary">Settings</Link>
       </div>
 
       {/* Stats */}
