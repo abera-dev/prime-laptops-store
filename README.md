@@ -34,7 +34,7 @@ laptop-ecommerce-platform/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js v16+
+- Node.js v20+
 - PostgreSQL running locally
 
 ### 1. Database Setup
@@ -127,5 +127,5 @@ npm start
 ## ☁️ Deployment
 
 - **Frontend** → Vercel or Netlify (set `REACT_APP_API_URL` env var)
-- **Backend** → Render or Railway (set `DATABASE_URL`, `JWT_SECRET`, `CLIENT_URL`)
+- **Backend** → Render or Railway (set `DATABASE_URL`, `JWT_SECRET`, `CLIENT_ORIGINS`, `TRUST_PROXY`, `METRICS_SECRET`)
 - **Database** → Supabase or Neon (managed PostgreSQL)

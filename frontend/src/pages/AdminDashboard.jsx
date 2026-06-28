@@ -22,8 +22,8 @@ export default function AdminDashboard() {
       api.get('/orders'),
       api.get('/orders/stats'),
     ]);
-    setProds(pRes.data);
-    setOrders(oRes.data);
+    setProds(pRes.data.products ?? pRes.data);
+    setOrders(oRes.data.orders ?? oRes.data);
     setStats(sRes.data);
   }, []);
 

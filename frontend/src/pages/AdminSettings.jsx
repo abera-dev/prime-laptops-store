@@ -154,7 +154,6 @@ export default function AdminSettings({ theme, onToggleTheme }) {
         current_password: passwords.current_password,
         new_password: passwords.new_password,
       });
-      localStorage.removeItem('token');
       toast.success('Password changed');
       await logout();
     } catch (err) {

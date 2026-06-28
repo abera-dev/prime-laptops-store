@@ -133,10 +133,11 @@ export default function Products() {
       if (filters.max_price) params.max_price = filters.max_price;
       if (filters.search)    params.search    = filters.search;
       const res = await api.get('/products', { params, signal });
+      const items = res.data.products ?? res.data;
       setProducts(current => {
         const currentIds = current.map(p => p.id).join(',');
-        const nextIds = res.data.map(p => p.id).join(',');
-        return currentIds === nextIds ? current : res.data;
+        const nextIds = items.map(p => p.id).join(',');
+        return currentIds === nextIds ? current : items;
       });
     } catch (err) {
       if (err.name !== 'CanceledError' && err.code !== 'ERR_CANCELED') setProducts([]);

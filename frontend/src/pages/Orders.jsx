@@ -16,7 +16,7 @@ export default function Orders() {
 
   useEffect(() => {
     api.get('/orders')
-      .then(r => setOrders(r.data))
+      .then(r => setOrders(r.data.orders ?? r.data))
       .catch(() => setOrders([]))
       .finally(() => setL(false));
   }, []);
