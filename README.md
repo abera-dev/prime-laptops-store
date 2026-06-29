@@ -166,17 +166,3 @@ npm start
 | `TRUST_PROXY`         | Set to `1` when behind a reverse proxy            |
 | `DATABASE_SSL_MODE`   | `require` in production                           |
 
-### Frontend Environment
-
-| Variable                | Description                                      |
-|------------------------|--------------------------------------------------|
-| `REACT_APP_API_URL`    | Backend API base URL (defaults to `/api` proxy)  |
-
-### Demo Credentials
-
-| Role     | Email                  | Password    |
-|----------|------------------------|-------------|
-| Admin    | `admin@localhost.test` | `admin123`  |
-| Customer | `john@example.com`     | `password1` |
-
-> ⚠️ Demo users are created by `database/seeds.sql` — do not run seeds against production.
