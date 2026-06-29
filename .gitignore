@@ -5,4 +5,6 @@ dist/
 build/
 .DS_Store
 *.log
+graphify-out/
+backend/logs/
 
