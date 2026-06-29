@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken, setToken, clearToken } from './tokenStore';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://prime-laptops-store.onrender.com/api',
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
