@@ -287,10 +287,10 @@ export default function AdminSettings({ theme, onToggleTheme }) {
                   <input className="input" type="password" value={passwords.current_password} onChange={e => setPasswords(p => ({ ...p, current_password: e.target.value }))} required />
                 </Field>
                 <Field label="New Password">
-                  <input className="input" type="password" minLength={6} value={passwords.new_password} onChange={e => setPasswords(p => ({ ...p, new_password: e.target.value }))} required />
+                  <input className="input" type="password" minLength={6} maxLength={12} value={passwords.new_password} onChange={e => setPasswords(p => ({ ...p, new_password: e.target.value }))} required />
                 </Field>
                 <Field label="Confirm Password">
-                  <input className="input" type="password" minLength={6} value={passwords.confirm_password} onChange={e => setPasswords(p => ({ ...p, confirm_password: e.target.value }))} required />
+                  <input className="input" type="password" minLength={6} maxLength={12} value={passwords.confirm_password} onChange={e => setPasswords(p => ({ ...p, confirm_password: e.target.value }))} required />
                 </Field>
               </div>
               <button disabled={saving === 'password'} className="btn-primary mt-5">{saving === 'password' ? 'Updating...' : 'Change Password'}</button>

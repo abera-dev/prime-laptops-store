@@ -23,11 +23,11 @@ export default function Register() {
     } finally { setL(false); }
   };
 
-  const field = (key, label, type = 'text', placeholder = '') => (
+  const field = (key, label, type = 'text', placeholder = '', attrs = {}) => (
     <div>
       <label className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
       <input type={type} required className="input" placeholder={placeholder}
-        value={form[key]} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))} />
+        value={form[key]} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))} {...attrs} />
     </div>
   );
 
@@ -43,8 +43,8 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {field('name', 'Full Name', 'text', 'Abera Hagazi')}
           {field('email', 'Email', 'email', 'you@example.com')}
-          {field('password', 'Password', 'password', '••••••')}
-          {field('confirm', 'Confirm Password', 'password', '••••••')}
+          {field('password', 'Password', 'password', '••••••', { maxLength: 12 })}
+          {field('confirm', 'Confirm Password', 'password', '••••••', { maxLength: 12 })}
           <button type="submit" disabled={loading} className="btn-primary w-full py-2.5">
             {loading ? 'Creating account…' : 'Create Account'}
           </button>
