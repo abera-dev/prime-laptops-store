@@ -8,7 +8,6 @@ export default function Navbar({ theme, onToggleTheme }) {
   const { itemCount }    = useCart();
   const navigate         = useNavigate();
   const location         = useLocation();
-  const isAdmin          = location.pathname.startsWith('/admin');
 
   const handleLogout = () => {
     logout();
@@ -31,14 +30,14 @@ export default function Navbar({ theme, onToggleTheme }) {
 
           {/* Nav Links */}
           <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-400">
-            <Link to="/" className="hover:text-cyan transition-colors">Home</Link>
-            <Link to="/products" className="hover:text-cyan transition-colors">Shop</Link>
+            <Link to="/" className={`hover:text-cyan transition-colors ${location.pathname === '/' ? 'text-cyan' : ''}`}>Home</Link>
+            <Link to="/products" className={`hover:text-cyan transition-colors ${location.pathname.startsWith('/products') ? 'text-cyan' : ''}`}>Shop</Link>
             {user?.role === 'admin' && (
               <>
-                <Link to="/admin" className={`hover:text-cyan transition-colors ${isAdmin ? 'text-cyan' : ''}`}>
+                <Link to="/admin" className={`hover:text-cyan transition-colors ${location.pathname.startsWith('/admin') ? 'text-cyan' : ''}`}>
                   Admin Panel
                 </Link>
-                <Link to="/admin/settings" className="hover:text-cyan transition-colors">
+                <Link to="/admin/settings" className={`hover:text-cyan transition-colors ${location.pathname.startsWith('/admin/settings') ? 'text-cyan' : ''}`}>
                   Settings
                 </Link>
               </>
@@ -49,7 +48,7 @@ export default function Navbar({ theme, onToggleTheme }) {
           <div className="flex items-center gap-3">
             {user ? (
               <>
-                <Link to="/cart" className="relative p-2 text-slate-300 hover:text-cyan transition-colors">
+                <Link to="/cart" className={`relative p-2 text-slate-300 hover:text-cyan transition-colors ${location.pathname.startsWith('/cart') ? 'text-cyan' : ''}`}>
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -60,7 +59,7 @@ export default function Navbar({ theme, onToggleTheme }) {
                     </span>
                   )}
                 </Link>
-                <Link to="/orders" className="text-sm text-slate-400 hover:text-cyan transition-colors hidden sm:block">
+                <Link to="/orders" className={`text-sm text-slate-400 hover:text-cyan transition-colors hidden sm:block ${location.pathname.startsWith('/orders') ? 'text-cyan' : ''}`}>
                   Orders
                 </Link>
                 <div className="flex items-center gap-2">
