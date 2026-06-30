@@ -4,7 +4,7 @@ import api from '../utils/api';
 import toast from 'react-hot-toast';
 
 const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer'];
-const EMPTY_FORM = { name: '', brand: 'Dell', price: '', cpu: '', ram_gb: '', storage_gb: '', gpu: '', stock: '', image: '' };
+const EMPTY_FORM = { name: '', brand: 'Dell', price: '', cpu: '', ram_gb: '', storage_gb: '', storage_unit: 'GB', gpu: '', size_inches: '', stock: '', image: '', image2: '', image3: '' };
 
 export default function AdminDashboard() {
   const [tab, setTab]         = useState('products');
@@ -30,7 +30,7 @@ export default function AdminDashboard() {
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const openCreate = () => { setForm(EMPTY_FORM); setEditP(null); setShowF(true); };
-  const openEdit   = (p) => { setForm({ ...p, price: p.price, ram_gb: p.ram_gb, storage_gb: p.storage_gb, stock: p.stock }); setEditP(p); setShowF(true); };
+  const openEdit   = (p) => { setForm({ ...p, price: p.price, ram_gb: p.ram_gb, storage_gb: p.storage_gb, storage_unit: p.storage_unit || 'GB', size_inches: p.size_inches, stock: p.stock, image2: p.image2 || '', image3: p.image3 || '' }); setEditP(p); setShowF(true); };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
                     <td className="px-4 py-3 text-slate-400">{p.brand}</td>
                     <td className="px-4 py-3 tech-price">${Number(p.price).toLocaleString()}</td>
                     <td className="px-4 py-3 font-mono text-slate-400">{p.ram_gb}GB</td>
-                    <td className="px-4 py-3 font-mono text-slate-400">{p.storage_gb}GB</td>
+                    <td className="px-4 py-3 font-mono text-slate-400">{p.storage_gb} {p.storage_unit || 'GB'}</td>
                     <td className="px-4 py-3">
                       <span className={`badge ${p.stock > 0 ? 'border-emerald-300/40 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/40 bg-rose-500/10 text-rose-200'}`}>
                         {p.stock}
@@ -232,20 +232,38 @@ export default function AdminDashboard() {
                 <input type="number" required min="1" className="input" placeholder="16" value={form.ram_gb} onChange={e => setForm(p => ({ ...p, ram_gb: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Storage (GB)</label>
-                <input type="number" required min="1" className="input" placeholder="512" value={form.storage_gb} onChange={e => setForm(p => ({ ...p, storage_gb: e.target.value }))} />
+                <label className="block text-sm font-medium text-slate-300 mb-1">Storage</label>
+                <div className="flex gap-2">
+                  <input type="number" required min="1" className="input flex-1 min-w-0" placeholder="512" value={form.storage_gb} onChange={e => setForm(p => ({ ...p, storage_gb: e.target.value }))} />
+                  <select className="input w-20 shrink-0" value={form.storage_unit} onChange={e => setForm(p => ({ ...p, storage_unit: e.target.value }))}>
+                    <option value="GB">GB</option>
+                    <option value="TB">TB</option>
+                  </select>
+                </div>
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-slate-300 mb-1">GPU</label>
                 <input required className="input" placeholder="NVIDIA GeForce RTX 4060" value={form.gpu} onChange={e => setForm(p => ({ ...p, gpu: e.target.value }))} />
               </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-300 mb-1">Laptop Size (inches)</label>
+                <input type="number" required min="0.1" step="0.1" className="input" placeholder="e.g. 15.6" value={form.size_inches} onChange={e => setForm(p => ({ ...p, size_inches: e.target.value }))} />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Stock</label>
                 <input type="number" required min="0" className="input" placeholder="25" value={form.stock} onChange={e => setForm(p => ({ ...p, stock: e.target.value }))} />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Image URL</label>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-300 mb-1">Primary Image</label>
                 <input required className="input" placeholder="https://..." value={form.image} onChange={e => setForm(p => ({ ...p, image: e.target.value }))} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Secondary Image <span className="text-slate-500">(optional)</span></label>
+                <input className="input" placeholder="https://..." value={form.image2} onChange={e => setForm(p => ({ ...p, image2: e.target.value }))} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Third Image <span className="text-slate-500">(optional)</span></label>
+                <input className="input" placeholder="https://..." value={form.image3} onChange={e => setForm(p => ({ ...p, image3: e.target.value }))} />
               </div>
               <div className="col-span-2 flex gap-3 pt-2">
                 <button type="submit" disabled={loading} className="btn-primary flex-1 py-2.5">

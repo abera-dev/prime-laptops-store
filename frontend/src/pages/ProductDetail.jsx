@@ -10,6 +10,7 @@ export default function ProductDetail() {
   const [product, setP]   = useState(null);
   const [loading, setL]   = useState(true);
   const [qty, setQty]     = useState(1);
+  const [selectedImg, setSelectedImg] = useState(0);
   const { addToCart }     = useCart();
   const { user }          = useAuth();
 
@@ -33,11 +34,14 @@ export default function ProductDetail() {
   if (loading) return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cyan"/></div>;
   if (!product) return <div className="text-center py-20"><p className="text-slate-400">Product not found.</p><Link to="/products" className="btn-primary mt-4 inline-block">Back to Shop</Link></div>;
 
+  const images = [product.image, product.image2, product.image3].filter(Boolean);
+
   const specs = [
     { label: 'Processor', value: product.cpu },
     { label: 'RAM', value: `${product.ram_gb} GB` },
-    { label: 'Storage', value: `${product.storage_gb >= 1000 ? product.storage_gb/1000 + ' TB' : product.storage_gb + ' GB'}` },
+    { label: 'Storage', value: `${product.storage_gb} ${product.storage_unit || 'GB'}` },
     { label: 'Graphics', value: product.gpu },
+    { label: 'Screen Size', value: `${product.size_inches} inches` },
     { label: 'Brand', value: product.brand },
     { label: 'In Stock', value: product.stock > 0 ? `${product.stock} units` : 'Out of stock' },
   ];
@@ -47,9 +51,20 @@ export default function ProductDetail() {
       <Link to="/products" className="text-sm text-cyan hover:underline mb-6 inline-block">Back to Shop</Link>
 
       <div className="card overflow-visible grid md:grid-cols-2 gap-0">
-        <div className="bg-white/[0.03] p-8 flex items-center justify-center rounded-l-lg">
-          <img src={product.image} alt={product.name} className="w-full max-w-sm object-contain rounded-lg"
+        <div className="bg-white/[0.03] p-8 flex flex-col items-center justify-center rounded-l-lg">
+          <img src={images[selectedImg]} alt={product.name} className="w-full max-w-sm object-contain rounded-lg"
             onError={e => e.target.src='https://via.placeholder.com/400x300?text=Laptop'} />
+          {images.length > 1 && (
+            <div className="flex gap-2 mt-4">
+              {images.map((img, i) => (
+                <button key={i} onClick={() => setSelectedImg(i)}
+                  className={`w-16 h-12 rounded overflow-hidden border-2 transition-colors ${selectedImg === i ? 'border-cyan' : 'border-white/10 hover:border-white/30'}`}>
+                  <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover"
+                    onError={e => e.target.src='https://via.placeholder.com/64x48?text=Img'} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="p-8">
