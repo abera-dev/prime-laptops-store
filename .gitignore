@@ -7,4 +7,6 @@ build/
 *.log
 graphify-out/
 backend/logs/
+backend/
+database/
 
