@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
@@ -7,6 +7,8 @@ export default function Navbar({ theme, onToggleTheme }) {
   const { user, logout } = useAuth();
   const { itemCount }    = useCart();
   const navigate         = useNavigate();
+  const location         = useLocation();
+  const isAdmin          = location.pathname.startsWith('/admin');
 
   const handleLogout = () => {
     logout();
@@ -33,7 +35,7 @@ export default function Navbar({ theme, onToggleTheme }) {
             <Link to="/products" className="hover:text-cyan transition-colors">Shop</Link>
             {user?.role === 'admin' && (
               <>
-                <Link to="/admin" className="text-cyan hover:text-white transition-colors font-semibold">
+                <Link to="/admin" className={`hover:text-cyan transition-colors ${isAdmin ? 'text-cyan' : ''}`}>
                   Admin Panel
                 </Link>
                 <Link to="/admin/settings" className="hover:text-cyan transition-colors">
