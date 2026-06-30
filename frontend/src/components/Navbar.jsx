@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
+import logo from '../assets/Screenshot From 2026-06-30 13-30-57.png';
 
 export default function Navbar({ theme, onToggleTheme }) {
   const { user, logout } = useAuth();
@@ -21,11 +22,12 @@ export default function Navbar({ theme, onToggleTheme }) {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">💻</span>
-            <span className="font-display text-2xl font-extrabold uppercase text-slate-50">
-              Prime<span className="text-cyan">Laptops</span>
-            </span>
+          <Link to="/" className="flex items-center shrink-0 group">
+            <img
+              src={logo}
+              alt="Prime Laptops"
+              className="w-40 sm:w-48 lg:w-52 h-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
+            />
           </Link>
 
           {/* Nav Links */}

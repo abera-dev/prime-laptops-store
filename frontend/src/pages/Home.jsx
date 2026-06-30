@@ -1,42 +1,87 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import heroDark  from '../assets/background_image.png';
+import heroLight from '../assets/background_light.png';
 
-export default function Home() {
-  useEffect(() => {
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.margin = '0';
-    document.documentElement.style.padding = '0';
-    document.documentElement.style.overflow = 'hidden';
-    return () => {
-      document.body.style.margin = '';
-      document.body.style.padding = '';
-      document.body.style.overflow = '';
-      document.documentElement.style.margin = '';
-      document.documentElement.style.padding = '';
-      document.documentElement.style.overflow = '';
-    };
-  }, []);
-
+export default function Home({ isLight }) {
   return (
-    <div className="relative bg-[#070b14] h-[calc(100vh-4rem)] overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-[#2563eb] rounded-full blur-[80px] opacity-20" />
-        <div className="absolute top-1/3 -right-1/4 w-1/2 h-1/2 bg-[#22d3ee] rounded-full blur-[80px] opacity-[0.18]" />
-        <div className="absolute -bottom-1/4 left-1/4 w-1/2 h-1/2 bg-[#2563eb] rounded-full blur-[80px] opacity-15" />
-      </div>
+    <div className="relative h-full w-full overflow-hidden">
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center text-white">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan/60 to-transparent" />
+      {/* ── Dark background ─────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        style={{
+          backgroundImage: `url(${heroDark})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          transition: 'opacity 280ms ease',
+          opacity: isLight ? 0 : 1,
+        }}
+        className="absolute inset-0"
+      />
+
+      {/* ── Light background ────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        style={{
+          backgroundImage: `url(${heroLight})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          transition: 'opacity 280ms ease',
+          opacity: isLight ? 1 : 0,
+        }}
+        className="absolute inset-0"
+      />
+
+      {/* ── Dark overlay — gradient, heavier left for text ──── */}
+      <div
+        aria-hidden="true"
+        style={{
+          background: isLight
+            ? 'linear-gradient(to right, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0.04) 100%)'
+            : 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 45%, rgba(0,0,0,0.30) 100%)',
+          transition: 'background 280ms ease',
+        }}
+        className="absolute inset-0"
+      />
+
+      {/* ── Top accent line ─────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px pointer-events-none"
+        style={{
+          background: isLight
+            ? 'linear-gradient(to right, transparent, rgba(37,99,235,0.45), transparent)'
+            : 'linear-gradient(to right, transparent, rgba(34,211,238,0.55), transparent)',
+          transition: 'background 280ms ease',
+        }}
+      />
+
+      {/* ── Hero content ────────────────────────────────────── */}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
         <div className="max-w-4xl">
-          <h1 className="mb-4 font-display text-6xl font-extrabold uppercase leading-none sm:text-7xl">
+          <h1
+            className="mb-4 font-display text-6xl font-extrabold uppercase leading-none sm:text-7xl drop-shadow-lg"
+            style={{
+              color: isLight ? '#0f172a' : '#ffffff',
+              transition: 'color 280ms ease',
+            }}
+          >
             Find Your Perfect Laptop
           </h1>
-          <p className="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
+
+          <p
+            className="text-lg mb-8 max-w-2xl mx-auto drop-shadow"
+            style={{
+              color: isLight ? '#1e3a5f' : '#cbd5e1',
+              transition: 'color 280ms ease',
+            }}
+          >
             Browse top brands including Dell, HP, Lenovo, Apple, ASUS, and Acer.
             Filter by specs, compare prices, and order with confidence.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/products" className="btn-primary py-3 px-8">
               Shop Now
@@ -47,6 +92,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

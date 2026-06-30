@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Root background lock — outside any @layer so it cannot be
+      overridden by Tailwind's layer order. This matches the inline
+      <style> in index.html to guarantee zero white flash even if the
+      CSS bundle is delayed.                                           ── */
+html, body {
+  background-color: #07090f;
+}
+
 @layer base {
   html {
     @apply bg-night;
@@ -75,14 +83,21 @@
   }
 }
 
-* {
+/* ── Scoped transitions — exclude layout roots to prevent flash ── */
+*:not(html):not(body):not(#root):not(main):not(div[class*="h-screen"]):not(div[class*="min-h-screen"]) {
   transition-property: background-color, border-color, color, box-shadow, opacity, transform;
   transition-duration: 200ms;
   transition-timing-function: ease;
 }
 
-html[data-theme='light'] {
-  background: #f5f8ff;
+/* ── Persistent background on #root — prevents white flash ── */
+#root {
+  min-height: 100vh;
+  background-color: #07090f;
+}
+
+html[data-theme='light'] #root {
+  background-color: #f5f8ff;
 }
 
 html[data-theme='light'] body {

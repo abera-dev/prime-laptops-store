@@ -21,14 +21,32 @@ function ProductCard({ product }) {
     }
   };
 
-  const brandColors = {
-    Dell: 'border-electric/40 bg-electric/15 text-cyan',
-    HP: 'border-cyan/40 bg-cyan/10 text-cyan',
+  /* ── Brand badge color lookup — case-insensitive ──
+    First tries an exact match (fast path), then falls back to a
+    case-insensitive scan so "lenovo", "LENOVO", "Dell ", etc.
+    still get branded colors. Unknown or empty brands get a neutral
+    white/slate fallback.                                   */
+  const BRAND_COLORS = {
+    Dell:   'border-electric/40 bg-electric/15 text-cyan',
+    HP:     'border-cyan/40 bg-cyan/10 text-cyan',
     Lenovo: 'border-rose-400/40 bg-rose-500/10 text-rose-200',
-    Apple: 'border-slate-300/30 bg-white/10 text-slate-200',
-    ASUS: 'border-amber-300/40 bg-amber-400/10 text-amber-200',
-    Acer: 'border-emerald-300/40 bg-emerald-400/10 text-emerald-200',
+    Apple:  'border-slate-300/30 bg-white/10 text-slate-200',
+    ASUS:   'border-amber-300/40 bg-amber-400/10 text-amber-200',
+    Acer:   'border-emerald-300/40 bg-emerald-400/10 text-emerald-200',
   };
+
+  function brandBadgeColor(brand) {
+    if (!brand) return 'border-white/10 bg-white/10 text-slate-200';
+    const b = brand.trim();
+    if (BRAND_COLORS[b]) return BRAND_COLORS[b];
+    const key = Object.keys(BRAND_COLORS).find(
+      k => k.toLowerCase() === b.toLowerCase()
+    );
+    return key ? BRAND_COLORS[key] : 'border-white/10 bg-white/10 text-slate-200';
+  }
+
+  const brandColor = brandBadgeColor(product.brand);
+  const badgeText = product.brand || '—';
 
   return (
     <div className="card group flex min-h-[382px] flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
@@ -44,8 +62,8 @@ function ProductCard({ product }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           onError={(e) => { e.target.src = 'https://via.placeholder.com/400x300?text=Laptop'; }}
         />
-        <span className={`absolute top-2 left-2 badge ${brandColors[product.brand] || 'border-white/10 bg-white/10 text-slate-200'}`}>
-          {product.brand}
+        <span className={`absolute top-2 left-2 badge ${brandColor}`}>
+          {badgeText}
         </span>
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">

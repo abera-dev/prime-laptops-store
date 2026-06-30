@@ -3,23 +3,46 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#07090f" />
+    <meta name="theme-color" content="#f5f8ff" />
     <meta name="description" content="Multi-Brand Laptop E-Commerce Platform — Dell, HP, Lenovo, Apple, ASUS, Acer" />
     <title>Prime Laptops — Premium Laptops Online</title>
+    <!--
+      Inline style guarantees the dark/light background is painted BEFORE any
+      JavaScript executes — including the inline script below. The browser
+      applies <style> rules as it parses the <head>, so there is zero gap
+      between the first paint and the correct background color.
+    -->
+    <style>
+      /*
+        No !important here — without it, the <style> block still wins
+        during the initial paint gap (it's in <head>, parsed before any
+        CSS file). Once the CSS loads, rules like
+        html[data-theme='light'] body { background: ..., #f5f8ff }
+        correctly override the background-color longhand.
+      */
+      html, body {
+        background-color: #f5f8ff;
+      }
+    </style>
+    <!--
+      Theme-toggle script: restores user preference before React hydrates.
+      Background-color is already set by the <style> block above, so this
+      script only needs to handle <html data-theme> and colorScheme.
+    -->
   </head>
   <body>
     <script>
       (function () {
         try {
-          var theme = window.localStorage.getItem('theme') || 'dark';
-          document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
-          document.documentElement.style.colorScheme = theme === 'light' ? 'light' : 'dark';
-        } catch (error) {
-          document.documentElement.dataset.theme = 'dark';
+          var theme = window.localStorage.getItem('theme') || 'light';
+          document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light';
+          document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
         }
       }());
     </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root" style="min-height:100vh"></div>
   </body>
 </html>

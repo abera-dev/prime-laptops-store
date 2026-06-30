@@ -8,6 +8,10 @@ const RAM_OPTIONS = [4, 8, 16, 32];
 const EMPTY_FILTERS = { brand: '', ram_gb: '', max_price: '', search: '' };
 const GRID_CLASS = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),300px))] justify-start gap-6';
 
+/* sessionStorage key — survives tab navigation but not tab close,
+   so repeat visits within the same session load instantly.              */
+const CACHE_KEY = 'products_cache';
+
 const ProductSkeleton = memo(function ProductSkeleton() {
   return (
     <div className="card h-[382px] animate-pulse">
@@ -30,7 +34,7 @@ const ProductSkeleton = memo(function ProductSkeleton() {
   );
 });
 
-const FilterPanel = memo(function FilterPanel({ filters, onClear, onFilter, onSearchChange, onMaxPriceChange, onClose }) {
+const FilterPanel = memo(function FilterPanel({ filters, activeBrand, onClear, onFilter, onSearchChange, onMaxPriceChange, onClose }) {
   return (
     <div className="card p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -72,7 +76,7 @@ const FilterPanel = memo(function FilterPanel({ filters, onClear, onFilter, onSe
               key={b}
               onClick={() => onFilter('brand', b)}
               className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                filters.brand === b ? 'bg-electric font-semibold text-white shadow-lg shadow-electric/20' : 'text-slate-300 hover:bg-white/10 hover:text-cyan'
+                activeBrand === b ? 'bg-electric font-semibold text-white shadow-lg shadow-electric/20' : 'text-slate-300 hover:bg-white/10 hover:text-cyan'
               }`}
             >
               {b}
@@ -114,9 +118,20 @@ const FilterPanel = memo(function FilterPanel({ filters, onClear, onFilter, onSe
 
 export default function Products() {
   const [searchParams] = useSearchParams();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const [products, setProducts] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem(CACHE_KEY);
+      return cached ? JSON.parse(cached) : [];
+    } catch {
+      return [];
+    }
+  });
+  /* Skip skeleton on mount when cached data exists */
+  const hasCache = products.length > 0;
+  const [loading, setLoading] = useState(!hasCache);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [contentLoaded, setContentLoaded] = useState(hasCache);
+  const [showColdStartMsg, setShowColdStartMsg] = useState(false);
   const [filters, setFilters]   = useState({
     brand:     searchParams.get('brand') || '',
     ram_gb:    '',
@@ -139,6 +154,12 @@ export default function Products() {
         const nextIds = items.map(p => p.id).join(',');
         return currentIds === nextIds ? current : items;
       });
+      /* Persist to sessionStorage so repeat navigation is instant */
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(items));
+      } catch {
+        /* storage full or unavailable — non-critical */
+      }
     } catch (err) {
       if (err.name !== 'CanceledError' && err.code !== 'ERR_CANCELED') setProducts([]);
     } finally {
@@ -173,7 +194,34 @@ export default function Products() {
   const closeFilters = useCallback(() => setFiltersOpen(false), []);
   const hasProducts = products.length > 0;
   const initialLoading = loading && !hasProducts;
-  const filtering = loading && hasProducts;
+
+  /* ── Brand displayed in heading & active sidebar state — derived
+        from the products array, NOT from `filters.brand` which
+        updates before the fetch resolves. This keeps the heading,
+        active filter badge, and product grid in perfect sync.      ── */
+  const allSameBrand = hasProducts && products.every(p => p.brand === products[0].brand);
+  const displayBrand = allSameBrand ? products[0].brand : '';
+
+  /* ── Fade-in on first content reveal only ──
+    Once contentLoaded flips to true it stays true forever.
+    Removing the "if (loading) reset" guard ensures background
+    refreshes and brand filter changes never trigger an opacity
+    dip — only the initial skeleton→products transition fades in. */
+  useEffect(() => {
+    if (!loading && hasProducts && !contentLoaded) {
+      const raf = requestAnimationFrame(() => setContentLoaded(true));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [loading, hasProducts]);
+
+  /* ── Cold-start hint after 3 seconds ── */
+  useEffect(() => {
+    if (loading) {
+      const t = setTimeout(() => setShowColdStartMsg(true), 3000);
+      return () => clearTimeout(t);
+    }
+    setShowColdStartMsg(false);
+  }, [loading]);
 
   return (
     <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
@@ -184,6 +232,7 @@ export default function Products() {
           <div className="sticky top-24">
             <FilterPanel
               filters={filters}
+              activeBrand={displayBrand}
               onClear={clearFilters}
               onFilter={handleFilter}
               onSearchChange={updateSearch}
@@ -208,29 +257,49 @@ export default function Products() {
                 </svg>
               </button>
               <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50">
-              {filters.brand ? `${filters.brand} Laptops` : 'All Laptops'}
+              {displayBrand ? `${displayBrand} Laptops` : 'All Laptops'}
               </h1>
             </div>
-            <span className="font-mono text-sm text-slate-500">{products.length} products</span>
+            <span className="font-mono text-sm text-slate-500">
+              {initialLoading ? '—' : `${products.length} product${products.length === 1 ? '' : 's'}`}
+            </span>
           </div>
 
           <div className="min-h-[640px]" aria-busy={loading}>
             {initialLoading ? (
-            <div className={GRID_CLASS}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <ProductSkeleton key={i} />
-              ))}
-            </div>
-          ) : products.length === 0 ? (
-            <div className="py-20 text-center transition-opacity duration-200">
-              <p className="text-slate-400 text-lg">No products match your filters.</p>
-              <button onClick={clearFilters} className="btn-primary mt-4">Clear Filters</button>
-            </div>
-          ) : (
-            <div className={`${GRID_CLASS} transition-opacity duration-200 ${filtering ? 'opacity-60' : 'opacity-100'}`}>
-              {products.map(p => <ProductCard key={p.id} product={p} />)}
-            </div>
-          )}
+              <>
+                <div className={GRID_CLASS}>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <ProductSkeleton key={i} />
+                  ))}
+                </div>
+
+                {/* Cold-start hint — appears only after 3+ seconds */}
+                <div
+                  className={`mt-6 text-center transition-opacity duration-500 ${
+                    showColdStartMsg ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  aria-hidden={!showColdStartMsg}
+                >
+                  <p className="text-sm text-slate-500">
+                    Waking up the server… first load may take a moment.
+                  </p>
+                </div>
+              </>
+            ) : products.length === 0 ? (
+              <div className="py-20 text-center transition-opacity duration-200">
+                <p className="text-slate-400 text-lg">No products match your filters.</p>
+                <button onClick={clearFilters} className="btn-primary mt-4">Clear Filters</button>
+              </div>
+            ) : (
+              <div
+                className={`${GRID_CLASS} transition-all duration-300 ${
+                  contentLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                }`}
+              >
+                {products.map(p => <ProductCard key={p.id} product={p} />)}
+              </div>
+            )}
           </div>
         </main>
       </div>
@@ -256,6 +325,7 @@ export default function Products() {
         >
           <FilterPanel
             filters={filters}
+            activeBrand={displayBrand}
             onClear={clearFilters}
             onFilter={handleFilter}
             onSearchChange={updateSearch}
