@@ -17,6 +17,9 @@ export default function AdminDashboard() {
   const [formError, setFormErr] = useState('');
   const [brands, setBrands] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const fetchAll = useCallback(async () => {
     const [pRes, oRes, sRes] = await Promise.all([
@@ -79,6 +82,44 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSelect = (id) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.size === products.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(products.map(p => p.id)));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    const ids = [...selectedIds];
+    setConfirmBulkDelete(false);
+    setSelectedIds(new Set());
+    setBulkDeleting(true);
+
+    const previous = products;
+    setProds(prev => prev.filter(p => !ids.includes(p.id)));
+
+    try {
+      const res = await api.delete('/products', { data: { ids } });
+      toast.success(res.data.message);
+      await fetchAll();
+    } catch (err) {
+      setProds(previous);
+      const msg = err.response?.data?.message || 'Failed to delete products';
+      toast.error(msg);
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
   const handleStatusChange = async (orderId, status) => {
     try {
       await api.put(`/orders/${orderId}/status`, { status });
@@ -135,7 +176,18 @@ export default function AdminDashboard() {
 
       {tab === 'products' && (
         <div>
-          <div className="flex justify-end mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              {selectedIds.size > 0 && (
+                <button
+                  onClick={() => setConfirmBulkDelete(true)}
+                  disabled={bulkDeleting}
+                  className="btn-danger text-sm"
+                >
+                  Delete Selected ({selectedIds.size})
+                </button>
+              )}
+            </div>
             <button onClick={openCreate} className="btn-primary">+ Add Product</button>
           </div>
 
@@ -143,6 +195,14 @@ export default function AdminDashboard() {
             <table className="w-full text-sm">
               <thead className="bg-white/[0.04] border-b border-white/10">
                 <tr>
+                  <th className="px-4 py-3 w-10">
+                    <input
+                      type="checkbox"
+                      checked={products.length > 0 && selectedIds.size === products.length}
+                      onChange={handleSelectAll}
+                      className="accent-cyan h-4 w-4 rounded border-white/20 bg-white/10"
+                    />
+                  </th>
                   {['Image','Name','Brand','Price','RAM','Storage','Stock','Actions'].map(h => (
                     <th key={h} className="text-left px-4 py-3 font-mono text-xs font-semibold text-slate-500 uppercase tracking-normal">{h}</th>
                   ))}
@@ -152,7 +212,15 @@ export default function AdminDashboard() {
                 {products.map(p => {
                   const isNew = new Date() - new Date(p.created_at) < 28 * 24 * 60 * 60 * 1000;
                   return (
-                  <tr key={p.id} className="hover:bg-white/[0.04]">
+                  <tr key={p.id} className={`hover:bg-white/[0.04] ${selectedIds.has(p.id) ? 'bg-cyan/5' : ''}`}>
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(p.id)}
+                        onChange={() => handleSelect(p.id)}
+                        className="accent-cyan h-4 w-4 rounded border-white/20 bg-white/10"
+                      />
+                    </td>
                     <td className="px-4 py-3">
                       <img src={p.image} alt={p.name} className="w-14 h-10 object-cover rounded" onError={e=>e.target.src='https://via.placeholder.com/56x40?text=Img'} />
                     </td>
@@ -305,7 +373,23 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Confirm Delete Modal */}
+      {/* Confirm Bulk Delete Modal */}
+      {confirmBulkDelete && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="card w-full max-w-md p-6">
+            <h2 className="font-display text-2xl font-bold uppercase text-slate-50 mb-2">Delete Products</h2>
+            <p className="text-slate-300 text-sm mb-6">
+              Are you sure you want to delete {selectedIds.size} products? This cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={handleBulkDelete} className="btn-danger flex-1 py-2.5">Confirm Delete</button>
+              <button onClick={() => setConfirmBulkDelete(false)} className="btn-secondary flex-1 py-2.5">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Single Delete Modal */}
       {confirmDelete && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="card w-full max-w-md p-6">
