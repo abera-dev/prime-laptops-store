@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
-import toast from 'react-hot-toast';
+import toast from '../utils/toast';
 
 const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer'];
 const EMPTY_FORM = { name: '', brand: 'Dell', price: '', cpu: '', ram_gb: '', storage_gb: '', storage_unit: 'GB', gpu: '', size_inches: '', stock: '', image: '', image2: '', image3: '' };
@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [editProd, setEditP]  = useState(null);
   const [form, setForm]       = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
+  const [formError, setFormErr] = useState('');
 
   const fetchAll = useCallback(async () => {
     const [pRes, oRes, sRes] = await Promise.all([
@@ -29,11 +30,15 @@ export default function AdminDashboard() {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  const openCreate = () => { setForm(EMPTY_FORM); setEditP(null); setShowF(true); };
-  const openEdit   = (p) => { setForm({ ...p, price: p.price, ram_gb: p.ram_gb, storage_gb: p.storage_gb, storage_unit: p.storage_unit || 'GB', size_inches: p.size_inches, stock: p.stock, image2: p.image2 || '', image3: p.image3 || '' }); setEditP(p); setShowF(true); };
+  const openCreate = () => { setForm(EMPTY_FORM); setEditP(null); setShowF(true); setFormErr(''); };
+  const openEdit   = (p) => {
+    setForm({ ...p, price: p.price, ram_gb: p.ram_gb, storage_gb: p.storage_gb, storage_unit: p.storage_unit || 'GB', size_inches: p.size_inches, stock: p.stock, image2: p.image2 || '', image3: p.image3 || '' });
+    setEditP(p); setShowF(true); setFormErr('');
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
+    setFormErr('');
     setLoading(true);
     try {
       if (editProd) {
@@ -46,7 +51,8 @@ export default function AdminDashboard() {
       setShowF(false);
       await fetchAll();
     } catch (err) {
-      toast.error(err.response?.data?.errors?.[0]?.msg || err.response?.data?.message || 'Error saving product');
+      const msg = err.response?.data?.errors?.[0]?.msg || err.response?.data?.message || 'Error saving product';
+      setFormErr(msg);
     } finally { setLoading(false); }
   };
 
@@ -56,7 +62,7 @@ export default function AdminDashboard() {
       await api.delete(`/products/${id}`);
       toast.success('Product deleted');
       await fetchAll();
-    } catch (err) { toast.error('Failed to delete product'); }
+    } catch { toast.error('Failed to delete product'); }
   };
 
   const handleStatusChange = async (orderId, status) => {
@@ -92,7 +98,6 @@ export default function AdminDashboard() {
         <Link to="/admin/settings" className="btn-secondary">Settings</Link>
       </div>
 
-      {/* Stats */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map(s => (
           <div key={s.label} className={`card p-5 flex items-center gap-4 ${s.color}`}>
@@ -105,7 +110,6 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-1 mb-6 border-b border-white/10">
         {['products', 'orders'].map(t => (
           <button key={t} onClick={() => setTab(t)}
@@ -115,7 +119,6 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Products Tab */}
       {tab === 'products' && (
         <div>
           <div className="flex justify-end mb-4">
@@ -161,7 +164,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Orders Tab */}
       {tab === 'orders' && (
         <div className="card overflow-x-auto">
           <table className="w-full text-sm">
@@ -200,7 +202,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Product Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="card w-full max-w-2xl max-h-screen overflow-y-auto">
@@ -265,6 +266,13 @@ export default function AdminDashboard() {
                 <label className="block text-sm font-medium text-slate-400 mb-1">Third Image <span className="text-slate-500">(optional)</span></label>
                 <input className="input" placeholder="https://..." value={form.image3} onChange={e => setForm(p => ({ ...p, image3: e.target.value }))} />
               </div>
+
+              {formError && (
+                <div className="col-span-2 rounded-lg bg-rose-500/10 border border-rose-500/30 px-4 py-3">
+                  <p className="text-rose-300 text-sm font-medium">{formError}</p>
+                </div>
+              )}
+
               <div className="col-span-2 flex gap-3 pt-2">
                 <button type="submit" disabled={loading} className="btn-primary flex-1 py-2.5">
                   {loading ? 'Saving…' : editProd ? 'Update Product' : 'Create Product'}

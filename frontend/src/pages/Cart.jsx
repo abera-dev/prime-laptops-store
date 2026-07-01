@@ -1,17 +1,30 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import api from '../utils/api';
-import toast from 'react-hot-toast';
+import toast from '../utils/toast';
 
 export default function Cart() {
   const { cart, loading, updateItem, removeItem, total, clearCart } = useCart();
   const navigate = useNavigate();
 
+  const handleUpdate = async (id, qty) => {
+    try {
+      await updateItem(id, qty);
+    } catch { /* handled by context */ }
+  };
+
+  const handleRemove = async (id) => {
+    try {
+      await removeItem(id);
+      toast.success('Item removed from cart');
+    } catch { /* handled by context */ }
+  };
+
   const handleCheckout = async () => {
     try {
       await api.post('/orders/checkout');
       await clearCart();
-      toast.success('Order placed successfully! 🎉');
+      toast.success('Order placed successfully!');
       navigate('/orders');
     } catch (e) {
       toast.error(e.response?.data?.message || 'Checkout failed');
@@ -44,7 +57,6 @@ export default function Cart() {
       <h1 className="font-display text-4xl font-extrabold uppercase text-slate-50 mb-8">Shopping Cart ({cart.length} items)</h1>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Items */}
         <div className="lg:col-span-2 space-y-4">
           {cart.map(item => (
             <div key={item.id} className="card p-4 flex flex-col sm:flex-row gap-4 sm:items-center relative">
@@ -57,15 +69,15 @@ export default function Cart() {
               </div>
               <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
                 <div className="flex items-center border border-white/10 rounded-lg overflow-hidden bg-white/5">
-                  <button onClick={() => updateItem(item.id, item.quantity - 1)} disabled={item.quantity <= 1}
+                  <button onClick={() => handleUpdate(item.id, item.quantity - 1)} disabled={item.quantity <= 1}
                     className="px-3 py-1.5 hover:bg-white/10 text-sm font-bold disabled:opacity-40">-</button>
                   <span className="px-3 py-1.5 text-sm font-mono font-semibold">{item.quantity}</span>
-                  <button onClick={() => updateItem(item.id, item.quantity + 1)} disabled={item.quantity >= item.stock}
+                  <button onClick={() => handleUpdate(item.id, item.quantity + 1)} disabled={item.quantity >= item.stock}
                     className="px-3 py-1.5 hover:bg-white/10 text-sm font-bold disabled:opacity-40">+</button>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="tech-price w-20 text-right font-bold text-base">${(item.price * item.quantity).toLocaleString()}</p>
-                  <button onClick={() => removeItem(item.id)} className="text-rose-400 hover:text-rose-300 p-1 transition-colors">
+                  <button onClick={() => handleRemove(item.id)} className="text-rose-400 hover:text-rose-300 p-1 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
@@ -76,7 +88,6 @@ export default function Cart() {
           ))}
         </div>
 
-        {/* Summary */}
         <div className="card p-6 h-fit sticky top-20">
           <h2 className="font-display text-2xl font-bold uppercase text-slate-50 mb-4">Order Summary</h2>
           <div className="space-y-2 mb-4">

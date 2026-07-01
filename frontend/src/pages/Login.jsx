@@ -1,26 +1,58 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
+import toast from '../utils/toast';
+
+const ERROR_MAP = {
+  404: 'No account found with this email.',
+  401: 'Incorrect password. Please try again.',
+  429: 'Too many attempts. Please wait a few minutes.',
+};
 
 export default function Login() {
-  const [form, setForm]     = useState({ email: '', password: '' });
-  const [loading, setL]     = useState(false);
-  const { login }           = useAuth();
-  const navigate            = useNavigate();
+  const [form, setForm]         = useState({ email: '', password: '' });
+  const [loading, setL]         = useState(false);
+  const [formError, setFormErr] = useState('');
+  const [fieldErr, setFieldErr] = useState({ email: '', password: '' });
+  const { login }               = useAuth();
+  const navigate                = useNavigate();
+
+  const update = (key, val) => {
+    setForm(p => ({ ...p, [key]: val }));
+    if (fieldErr[key]) setFieldErr(p => ({ ...p, [key]: '' }));
+    if (formError) setFormErr('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormErr('');
+    setFieldErr({ email: '', password: '' });
+
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      setFieldErr(p => ({ ...p, email: 'Please enter a valid email address' }));
+      return;
+    }
+
     setL(true);
     try {
       const user = await login(form.email, form.password);
-      toast.success('Welcome back!');
+      toast.success('Logged in successfully');
       navigate(user.role === 'admin' ? '/admin' : '/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
-    } finally {
-      setL(false);
-    }
+      if (!err.response) {
+        setFormErr('Unable to connect. Please check your connection.');
+      } else {
+        const status = err.response.status;
+        const msg = ERROR_MAP[status];
+        if (msg) {
+          if (status === 404) setFieldErr(p => ({ ...p, email: msg }));
+          else if (status === 401) setFieldErr(p => ({ ...p, password: msg }));
+          else setFormErr(msg);
+        } else {
+          setFormErr(err.response?.data?.message || 'Login failed');
+        }
+      }
+    } finally { setL(false); }
   };
 
   return (
@@ -35,14 +67,23 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
-            <input type="email" required className="input" 
-              value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} />
+            <input type="email" required className={`input ${fieldErr.email ? 'border-rose-500 ring-2 ring-rose-500/20' : ''}`}
+              value={form.email} onChange={e => update('email', e.target.value)} />
+            {fieldErr.email && <p className="text-rose-400 text-xs mt-1">{fieldErr.email}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
-            <input type="password" required className="input" 
-              value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} />
+            <input type="password" required className={`input ${fieldErr.password ? 'border-rose-500 ring-2 ring-rose-500/20' : ''}`}
+              value={form.password} onChange={e => update('password', e.target.value)} />
+            {fieldErr.password && <p className="text-rose-400 text-xs mt-1">{fieldErr.password}</p>}
           </div>
+
+          {formError && (
+            <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 px-4 py-3">
+              <p className="text-rose-300 text-sm font-medium">{formError}</p>
+            </div>
+          )}
+
           <button type="submit" disabled={loading} className="btn-primary w-full py-2.5">
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
@@ -52,8 +93,6 @@ export default function Login() {
           Don't have an account?{' '}
           <Link to="/register" className="text-cyan font-semibold hover:underline">Create one</Link>
         </p>
-
-      
       </div>
     </div>
   );

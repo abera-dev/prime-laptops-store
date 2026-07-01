@@ -17,13 +17,6 @@ import Register      from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminSettings from './pages/AdminSettings';
 
-const toastStyle = (isLight) => ({
-  background: isLight ? 'rgba(255, 255, 255, 0.96)' : 'rgba(13, 19, 32, 0.94)',
-  border: isLight ? '1px solid rgba(29, 127, 255, 0.18)' : '1px solid rgba(32, 240, 255, 0.18)',
-  color: isLight ? '#0f172a' : '#e2e8f0',
-  boxShadow: isLight ? '0 18px 50px rgba(15, 23, 42, 0.16)' : '0 18px 50px rgba(0, 0, 0, 0.35)',
-});
-
 function Footer() {
   return (
     <footer className="border-t border-white/10 bg-night/80 py-4 backdrop-blur flex-shrink-0">
@@ -55,7 +48,7 @@ function AppLayout({ theme, isLight, toggleTheme }) {
 
   return (
     <div className={isHome ? 'h-screen flex flex-col overflow-hidden' : 'min-h-screen flex flex-col'}>
-      <Toaster position="top-right" toastOptions={{ duration: 3000, style: toastStyle(isLight) }} />
+      <Toaster position="bottom-center" toastOptions={{ duration: 3000 }} />
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <main className={isHome ? 'flex-1 overflow-hidden' : 'flex-1'}>
         <Routes>

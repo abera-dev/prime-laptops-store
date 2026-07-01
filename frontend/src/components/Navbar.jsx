@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import toast from 'react-hot-toast';
+import toast from '../utils/toast';
 import logo from '../assets/Screenshot From 2026-06-30 13-30-57.png';
 
 export default function Navbar({ theme, onToggleTheme }) {

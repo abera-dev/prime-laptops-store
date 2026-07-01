@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
+import toast from '../utils/toast';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -70,6 +70,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
   const [tab, setTab] = useState('profile');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState('');
+  const [formError, setFormErr] = useState('');
   const [profile, setProfile] = useState({ name: '', email: '', avatar_url: '' });
   const [passwords, setPasswords] = useState({ current_password: '', new_password: '', confirm_password: '' });
   const [store, setStore] = useState(defaultStore);
@@ -125,8 +126,11 @@ export default function AdminSettings({ theme, onToggleTheme }) {
     setSystem(systemRes.data);
   };
 
+  const clearFormErr = () => { if (formError) setFormErr(''); };
+
   const saveProfile = async (e) => {
     e.preventDefault();
+    setFormErr('');
     setSaving('profile');
     try {
       const res = await api.put('/settings/profile', profile);
@@ -135,7 +139,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
       toast.success('Profile updated');
       await refreshActivity();
     } catch (err) {
-      toast.error(getError(err, 'Failed to update profile'));
+      setFormErr(getError(err, 'Failed to update profile'));
     } finally {
       setSaving('');
     }
@@ -143,8 +147,9 @@ export default function AdminSettings({ theme, onToggleTheme }) {
 
   const savePassword = async (e) => {
     e.preventDefault();
+    setFormErr('');
     if (passwords.new_password !== passwords.confirm_password) {
-      toast.error('New passwords do not match');
+      setFormErr('New passwords do not match');
       return;
     }
 
@@ -157,7 +162,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
       toast.success('Password changed');
       await logout();
     } catch (err) {
-      toast.error(getError(err, 'Failed to change password'));
+      setFormErr(getError(err, 'Failed to change password'));
     } finally {
       setSaving('');
     }
@@ -165,6 +170,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
 
   const saveStore = async (e) => {
     e.preventDefault();
+    setFormErr('');
     setSaving('store');
     try {
       const res = await api.put('/settings/store', store);
@@ -172,13 +178,14 @@ export default function AdminSettings({ theme, onToggleTheme }) {
       toast.success('Store settings saved');
       await refreshActivity();
     } catch (err) {
-      toast.error(getError(err, 'Failed to save store settings'));
+      setFormErr(getError(err, 'Failed to save store settings'));
     } finally {
       setSaving('');
     }
   };
 
   const savePrefs = async (nextPrefs = prefs) => {
+    setFormErr('');
     setSaving('prefs');
     try {
       const res = await api.put('/settings/preferences', nextPrefs);
@@ -186,7 +193,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
       toast.success('Preferences saved');
       await refreshActivity();
     } catch (err) {
-      toast.error(getError(err, 'Failed to save preferences'));
+      setFormErr(getError(err, 'Failed to save preferences'));
     } finally {
       setSaving('');
     }
@@ -224,6 +231,14 @@ export default function AdminSettings({ theme, onToggleTheme }) {
     );
   }
 
+  const ErrorBox = () => formError ? (
+    <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 px-4 py-3">
+      <p className="text-rose-300 text-sm font-medium">{formError}</p>
+    </div>
+  ) : null;
+
+  const onTabClick = (key) => { setTab(key); setFormErr(''); };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -240,7 +255,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
             {SECTION_TABS.map(([key, label]) => (
               <button
                 key={key}
-                onClick={() => setTab(key)}
+                onClick={() => onTabClick(key)}
                 className={`rounded-lg px-4 py-3 text-left text-sm font-semibold transition-colors ${tab === key ? 'bg-cyan/15 text-cyan' : 'text-slate-400 hover:bg-white/10 hover:text-slate-100'}`}
               >
                 {label}
@@ -263,16 +278,17 @@ export default function AdminSettings({ theme, onToggleTheme }) {
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <Field label="Name">
-                    <input className="input" value={profile.name} onChange={e => setProfile(p => ({ ...p, name: e.target.value }))} required />
+                    <input className="input" value={profile.name} onChange={e => { setProfile(p => ({ ...p, name: e.target.value })); clearFormErr(); }} required />
                   </Field>
                   <Field label="Email">
-                    <input className="input" type="email" value={profile.email} onChange={e => setProfile(p => ({ ...p, email: e.target.value }))} required />
+                    <input className="input" type="email" value={profile.email} onChange={e => { setProfile(p => ({ ...p, email: e.target.value })); clearFormErr(); }} required />
                   </Field>
                   <div className="md:col-span-2">
                     <Field label="Avatar URL">
-                      <input className="input" value={profile.avatar_url || ''} onChange={e => setProfile(p => ({ ...p, avatar_url: e.target.value }))} placeholder="https://..." />
+                      <input className="input" value={profile.avatar_url || ''} onChange={e => { setProfile(p => ({ ...p, avatar_url: e.target.value })); clearFormErr(); }} placeholder="https://..." />
                     </Field>
                   </div>
+                  <ErrorBox />
                   <button disabled={saving === 'profile'} className="btn-primary md:col-span-2">{saving === 'profile' ? 'Saving...' : 'Save Profile'}</button>
                 </div>
               </div>
@@ -284,15 +300,16 @@ export default function AdminSettings({ theme, onToggleTheme }) {
               <h2 className="mb-5 text-2xl font-bold uppercase">Security</h2>
               <div className="grid gap-4 md:grid-cols-3">
                 <Field label="Current Password">
-                  <input className="input" type="password" value={passwords.current_password} onChange={e => setPasswords(p => ({ ...p, current_password: e.target.value }))} required />
+                  <input className="input" type="password" value={passwords.current_password} onChange={e => { setPasswords(p => ({ ...p, current_password: e.target.value })); clearFormErr(); }} required />
                 </Field>
                 <Field label="New Password">
-                  <input className="input" type="password" minLength={6} maxLength={12} value={passwords.new_password} onChange={e => setPasswords(p => ({ ...p, new_password: e.target.value }))} required />
+                  <input className="input" type="password" minLength={6} maxLength={12} value={passwords.new_password} onChange={e => { setPasswords(p => ({ ...p, new_password: e.target.value })); clearFormErr(); }} required />
                 </Field>
                 <Field label="Confirm Password">
-                  <input className="input" type="password" minLength={6} maxLength={12} value={passwords.confirm_password} onChange={e => setPasswords(p => ({ ...p, confirm_password: e.target.value }))} required />
+                  <input className="input" type="password" minLength={6} maxLength={12} value={passwords.confirm_password} onChange={e => { setPasswords(p => ({ ...p, confirm_password: e.target.value })); clearFormErr(); }} required />
                 </Field>
               </div>
+              <ErrorBox />
               <button disabled={saving === 'password'} className="btn-primary mt-5">{saving === 'password' ? 'Updating...' : 'Change Password'}</button>
             </form>
           )}
@@ -302,16 +319,16 @@ export default function AdminSettings({ theme, onToggleTheme }) {
               <h2 className="mb-5 text-2xl font-bold uppercase">Store Settings</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Store Name">
-                  <input className="input" value={store.store_name} onChange={e => setStore(p => ({ ...p, store_name: e.target.value }))} required />
+                  <input className="input" value={store.store_name} onChange={e => { setStore(p => ({ ...p, store_name: e.target.value })); clearFormErr(); }} required />
                 </Field>
                 <Field label="Logo URL">
-                  <input className="input" value={store.logo_url || ''} onChange={e => setStore(p => ({ ...p, logo_url: e.target.value }))} placeholder="https://..." />
+                  <input className="input" value={store.logo_url || ''} onChange={e => { setStore(p => ({ ...p, logo_url: e.target.value })); clearFormErr(); }} placeholder="https://..." />
                 </Field>
                 <Field label="Support Email">
-                  <input className="input" type="email" value={store.support_email} onChange={e => setStore(p => ({ ...p, support_email: e.target.value }))} required />
+                  <input className="input" type="email" value={store.support_email} onChange={e => { setStore(p => ({ ...p, support_email: e.target.value })); clearFormErr(); }} required />
                 </Field>
                 <Field label="Phone">
-                  <input className="input" value={store.phone || ''} onChange={e => setStore(p => ({ ...p, phone: e.target.value }))} />
+                  <input className="input" value={store.phone || ''} onChange={e => { setStore(p => ({ ...p, phone: e.target.value })); clearFormErr(); }} />
                 </Field>
                 <Field label="Currency">
                   <select className="input" value={store.currency} onChange={e => setStore(p => ({ ...p, currency: e.target.value }))}>
@@ -325,6 +342,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
                   <input className="input" type="number" min="0" step="0.01" value={store.shipping_fee} onChange={e => setStore(p => ({ ...p, shipping_fee: e.target.value }))} />
                 </Field>
               </div>
+              <ErrorBox />
               <button disabled={saving === 'store'} className="btn-primary mt-5">{saving === 'store' ? 'Saving...' : 'Save Store Settings'}</button>
             </form>
           )}
@@ -344,6 +362,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
                   </button>
                 ))}
               </div>
+              <ErrorBox />
             </div>
           )}
 
@@ -356,6 +375,7 @@ export default function AdminSettings({ theme, onToggleTheme }) {
                 <Toggle label="Low Stock Alerts" checked={prefs.stock_notifications} onChange={value => setPrefs(p => ({ ...p, stock_notifications: value }))} />
                 <Toggle label="Security Alerts" checked={prefs.security_notifications} onChange={value => setPrefs(p => ({ ...p, security_notifications: value }))} />
               </div>
+              <ErrorBox />
               <button onClick={() => savePrefs()} disabled={saving === 'prefs'} className="btn-primary mt-5">{saving === 'prefs' ? 'Saving...' : 'Save Notifications'}</button>
             </div>
           )}
