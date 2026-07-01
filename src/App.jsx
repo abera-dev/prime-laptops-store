@@ -48,7 +48,7 @@ function AppLayout({ theme, isLight, toggleTheme }) {
 
   return (
     <div className={isHome ? 'h-screen flex flex-col overflow-hidden' : 'min-h-screen flex flex-col'}>
-      <Toaster position="bottom-center" toastOptions={{ duration: 3000 }} />
+      <Toaster position="top-center" containerStyle={{ top: 70 }} toastOptions={{ duration: 3000 }} />
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <main className={isHome ? 'flex-1 overflow-hidden' : 'flex-1'}>
         <Routes>

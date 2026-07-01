@@ -12,6 +12,7 @@ const base = {
 
 const success = (msg) =>
   toast.success(msg, {
+    position: 'top-center',
     style: { ...base, borderLeft: '4px solid #22c55e' },
     icon: '✓',
     duration: 3000,
@@ -19,6 +20,7 @@ const success = (msg) =>
 
 const error = (msg) =>
   toast.error(msg, {
+    position: 'bottom-center',
     style: { ...base, borderLeft: '4px solid #ef4444' },
     icon: '✗',
     duration: 3000,
@@ -26,6 +28,7 @@ const error = (msg) =>
 
 const warning = (msg) =>
   toast(msg, {
+    position: 'top-center',
     style: { ...base, borderLeft: '4px solid #eab308' },
     icon: '⚠',
     duration: 3000,
