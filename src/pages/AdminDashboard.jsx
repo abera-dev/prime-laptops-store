@@ -231,7 +231,7 @@ export default function AdminDashboard() {
                     <td className="px-4 py-3 text-slate-400">{p.brand}</td>
                     <td className="px-4 py-3 tech-price">${Number(p.price).toLocaleString()}</td>
                     <td className="px-4 py-3 font-mono text-slate-400">{p.ram_gb}GB</td>
-                    <td className="px-4 py-3 font-mono text-slate-400">{p.storage_gb} {p.storage_unit || 'GB'}</td>
+                    <td className="px-4 py-3 font-mono text-slate-400">{p.storage_gb} SSD</td>
                     <td className="px-4 py-3">
                       <span className={`badge ${p.stock > 0 ? 'border-emerald-300/40 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/40 bg-rose-500/10 text-rose-200'}`}>
                         {p.stock}

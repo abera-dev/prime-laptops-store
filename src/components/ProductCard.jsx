@@ -91,7 +91,7 @@ function ProductCard({ product }) {
           {[
             { icon: '🔲', label: product.cpu.split(' ').slice(0, 3).join(' ') },
             { icon: '💾', label: `${product.ram_gb}GB RAM` },
-            { icon: '💽', label: `${product.storage_gb} ${product.storage_unit || 'GB'}` },
+            { icon: '💽', label: `${product.storage_gb} SSD` },
             { icon: '🎮', label: product.gpu.split(' ').slice(-2).join(' ') },
           ].map((spec, i) => (
             <span key={i} className="tech-spec flex items-center gap-1">

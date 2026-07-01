@@ -39,7 +39,7 @@ export default function ProductDetail() {
   const specs = [
     { label: 'Processor', value: product.cpu },
     { label: 'RAM', value: `${product.ram_gb} GB` },
-    { label: 'Storage', value: `${product.storage_gb} ${product.storage_unit || 'GB'}` },
+    { label: 'Storage', value: `${product.storage_gb} SSD` },
     { label: 'Graphics', value: product.gpu },
     { label: 'Screen Size', value: `${product.size_inches} inches` },
     { label: 'Brand', value: product.brand },
