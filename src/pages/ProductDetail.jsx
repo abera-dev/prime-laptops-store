@@ -51,16 +51,16 @@ export default function ProductDetail() {
       <Link to="/products" className="text-sm text-cyan hover:underline mb-6 inline-block">Back to Shop</Link>
 
       <div className="card overflow-visible grid md:grid-cols-2 gap-0">
-        <div className="bg-white/[0.03] p-8 flex flex-col items-center justify-center rounded-l-lg">
-          <img src={images[selectedImg]} alt={product.name} className="w-full max-w-sm object-contain rounded-lg"
-            onError={e => e.target.src='https://via.placeholder.com/400x300?text=Laptop'} />
+        <div className="bg-white/[0.03] p-6 md:p-8 flex flex-col items-center justify-center rounded-l-lg min-h-[480px]">
+          <img src={images[selectedImg]} alt={product.name} className="w-full max-w-lg object-contain rounded-lg max-h-[400px]"
+            onError={e => e.target.src='https://via.placeholder.com/600x400?text=Laptop'} />
           {images.length > 1 && (
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-3 mt-5 flex-wrap justify-center">
               {images.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImg(i)}
-                  className={`w-16 h-12 rounded overflow-hidden border-2 transition-colors ${selectedImg === i ? 'border-cyan' : 'border-white/10 hover:border-white/30'}`}>
+                  className={`w-28 h-28 rounded-lg overflow-hidden border-2 transition-colors shrink-0 ${selectedImg === i ? 'border-cyan' : 'border-white/10 hover:border-white/30'}`}>
                   <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover"
-                    onError={e => e.target.src='https://via.placeholder.com/64x48?text=Img'} />
+                    onError={e => e.target.src='https://via.placeholder.com/112x112?text=Img'} />
                 </button>
               ))}
             </div>
