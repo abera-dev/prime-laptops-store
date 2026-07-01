@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import toast from '../utils/toast';
 
-const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer'];
+const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'Microsoft'];
 const EMPTY_FORM = { name: '', brand: 'Dell', price: '', cpu: '', ram_gb: '', storage_gb: '', storage_unit: 'GB', gpu: '', size_inches: '', stock: '', image: '', image2: '', image3: '' };
 
 export default function AdminDashboard() {

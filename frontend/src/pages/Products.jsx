@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 
-const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer'];
+const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'Microsoft'];
 const RAM_OPTIONS = [4, 8, 16, 32];
 const EMPTY_FILTERS = { brand: '', ram_gb: '', max_price: '', search: '' };
 const GRID_CLASS = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),300px))] justify-start gap-6';
