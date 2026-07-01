@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import toast from '../utils/toast';
 
-const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'Microsoft'];
-const EMPTY_FORM = { name: '', brand: 'Dell', price: '', cpu: '', ram_gb: '', storage_gb: '', storage_unit: 'GB', gpu: '', size_inches: '', stock: '', image: '', image2: '', image3: '' };
+const EMPTY_FORM = { name: '', brand: '', price: '', cpu: '', ram_gb: '', storage_gb: '', storage_unit: 'GB', gpu: '', size_inches: '', stock: '', image: '', image2: '', image3: '' };
 
 export default function AdminDashboard() {
   const [tab, setTab]           = useState('products');
@@ -16,6 +15,7 @@ export default function AdminDashboard() {
   const [form, setForm]         = useState(EMPTY_FORM);
   const [loading, setLoading]   = useState(false);
   const [formError, setFormErr] = useState('');
+  const [brands, setBrands] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   const fetchAll = useCallback(async () => {
@@ -30,6 +30,10 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  useEffect(() => {
+    api.get('/products/brands').then(r => setBrands(r.data.brands)).catch(() => {});
+  }, []);
 
   const openCreate = () => { setForm(EMPTY_FORM); setEditP(null); setShowF(true); setFormErr(''); };
   const openEdit   = (p) => {
@@ -226,9 +230,10 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Brand</label>
-                <select className="input" value={form.brand} onChange={e => setForm(p => ({ ...p, brand: e.target.value }))}>
-                  {BRANDS.map(b => <option key={b}>{b}</option>)}
-                </select>
+                <input className="input" list="brand-list" placeholder="e.g. Dell" value={form.brand} onChange={e => setForm(p => ({ ...p, brand: e.target.value }))} />
+                <datalist id="brand-list">
+                  {brands.map(b => <option key={b} value={b} />)}
+                </datalist>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Price ($)</label>

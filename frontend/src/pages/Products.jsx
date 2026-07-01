@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 
-const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'Microsoft'];
 const RAM_OPTIONS = [4, 8, 16, 32];
 const EMPTY_FILTERS = { brand: '', ram_gb: '', max_price: '', search: '' };
 const GRID_CLASS = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),300px))] justify-start gap-6';
@@ -34,7 +33,7 @@ const ProductSkeleton = memo(function ProductSkeleton() {
   );
 });
 
-const FilterPanel = memo(function FilterPanel({ filters, activeBrand, onClear, onFilter, onSearchChange, onMaxPriceChange, onClose }) {
+const FilterPanel = memo(function FilterPanel({ brands, filters, activeBrand, onClear, onFilter, onSearchChange, onMaxPriceChange, onClose }) {
   return (
     <div className="card p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -71,7 +70,7 @@ const FilterPanel = memo(function FilterPanel({ filters, activeBrand, onClear, o
       <div className="mb-5">
         <label className="font-mono text-xs font-semibold uppercase tracking-normal text-slate-500">Brand</label>
         <div className="mt-2 space-y-1">
-          {BRANDS.map(b => (
+          {brands.map(b => (
             <button
               key={b}
               onClick={() => onFilter('brand', b)}
@@ -131,6 +130,7 @@ export default function Products() {
   const [loading, setLoading] = useState(!hasCache);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [contentLoaded, setContentLoaded] = useState(hasCache);
+  const [brands, setBrands] = useState([]);
   const [showColdStartMsg, setShowColdStartMsg] = useState(false);
   const [filters, setFilters]   = useState({
     brand:     searchParams.get('brand') || '',
@@ -172,6 +172,10 @@ export default function Products() {
     fetchProducts(controller.signal);
     return () => controller.abort();
   }, [fetchProducts]);
+
+  useEffect(() => {
+    api.get('/products/brands').then(r => setBrands(r.data.brands)).catch(() => {});
+  }, []);
 
   const handleFilter = useCallback((key, val) => {
     setFilters(prev => ({ ...prev, [key]: prev[key] === val ? '' : val }));
@@ -231,6 +235,7 @@ export default function Products() {
         <aside className="hidden lg:block">
           <div className="sticky top-24">
             <FilterPanel
+              brands={brands}
               filters={filters}
               activeBrand={displayBrand}
               onClear={clearFilters}
@@ -324,6 +329,7 @@ export default function Products() {
           aria-label="Product filters"
         >
           <FilterPanel
+            brands={brands}
             filters={filters}
             activeBrand={displayBrand}
             onClear={clearFilters}
