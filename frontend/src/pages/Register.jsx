@@ -82,8 +82,8 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {field('name', 'Full Name', 'text', 'Abera Hagazi')}
           {field('email', 'Email', 'email', 'you@example.com')}
-          {field('password', 'Password', 'password', '••••••', { maxLength: 12 })}
-          {field('confirm', 'Confirm Password', 'password', '••••••', { maxLength: 12 })}
+          {field('password', 'Password', 'password', '••••••')}
+          {field('confirm', 'Confirm Password', 'password', '••••••')}
 
           {formError && (
             <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 px-4 py-3">
