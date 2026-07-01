@@ -5,7 +5,7 @@ import ProductCard from '../components/ProductCard';
 
 const RAM_OPTIONS = [4, 8, 16, 32];
 const EMPTY_FILTERS = { brand: '', ram_gb: '', max_price: '', search: '' };
-const GRID_CLASS = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),300px))] justify-start gap-6';
+const GRID_CLASS = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,260px),340px))] justify-start gap-6';
 
 /* sessionStorage key — survives tab navigation but not tab close,
    so repeat visits within the same session load instantly.              */
