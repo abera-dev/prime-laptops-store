@@ -149,12 +149,17 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
-                {products.map(p => (
+                {products.map(p => {
+                  const isNew = new Date() - new Date(p.created_at) < 28 * 24 * 60 * 60 * 1000;
+                  return (
                   <tr key={p.id} className="hover:bg-white/[0.04]">
                     <td className="px-4 py-3">
                       <img src={p.image} alt={p.name} className="w-14 h-10 object-cover rounded" onError={e=>e.target.src='https://via.placeholder.com/56x40?text=Img'} />
                     </td>
-                    <td className="px-4 py-3 font-medium text-slate-100 max-w-xs truncate">{p.name}</td>
+                    <td className="px-4 py-3 font-medium text-slate-100 max-w-xs truncate">
+                      {p.name}
+                      {isNew && <span className="ml-2 rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-bold text-white">NEW</span>}
+                    </td>
                     <td className="px-4 py-3 text-slate-400">{p.brand}</td>
                     <td className="px-4 py-3 tech-price">${Number(p.price).toLocaleString()}</td>
                     <td className="px-4 py-3 font-mono text-slate-400">{p.ram_gb}GB</td>
@@ -171,7 +176,8 @@ export default function AdminDashboard() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

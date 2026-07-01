@@ -47,9 +47,10 @@ function ProductCard({ product }) {
 
   const brandColor = brandBadgeColor(product.brand);
   const badgeText = product.brand || '—';
+  const isNew = new Date() - new Date(product.created_at) < 28 * 24 * 60 * 60 * 1000;
 
   return (
-    <div className="card group flex min-h-[382px] flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
+    <div className="card group relative flex min-h-[382px] flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
       {/* Image */}
       <Link
         to={`/products/${product.id}`}
@@ -65,6 +66,11 @@ function ProductCard({ product }) {
         <span className={`absolute top-2 left-2 badge ${brandColor}`}>
           {badgeText}
         </span>
+        {isNew && (
+          <span className="absolute top-2 right-2 rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-bold text-white shadow-sm">
+            NEW
+          </span>
+        )}
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
             <span className="text-white font-bold text-sm bg-rose-600 px-3 py-1 rounded-full">Out of Stock</span>
