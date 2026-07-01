@@ -319,12 +319,18 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">RAM (GB)</label>
-                <input type="number" required min="1" className="input" placeholder="16" value={form.ram_gb} onChange={e => setForm(p => ({ ...p, ram_gb: e.target.value }))} />
+                <input type="text" inputMode="numeric" required className="input" list="ram-options" placeholder="16" value={form.ram_gb} onChange={e => setForm(p => ({ ...p, ram_gb: e.target.value }))} />
+                <datalist id="ram-options">
+                  <option value="8" /><option value="16" /><option value="32" /><option value="64" /><option value="128" />
+                </datalist>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Storage</label>
                 <div className="flex gap-2">
-                  <input type="number" required min="1" className="input flex-1 min-w-0" placeholder="512" value={form.storage_gb} onChange={e => setForm(p => ({ ...p, storage_gb: e.target.value }))} />
+                  <input type="text" inputMode="numeric" required className="input flex-1 min-w-0" list="storage-options" placeholder="512" value={form.storage_gb} onChange={e => setForm(p => ({ ...p, storage_gb: e.target.value }))} />
+                  <datalist id="storage-options">
+                    <option value="256" /><option value="512" /><option value="1" /><option value="2" /><option value="3" /><option value="4" />
+                  </datalist>
                   <select className="input w-20 shrink-0" value={form.storage_unit} onChange={e => setForm(p => ({ ...p, storage_unit: e.target.value }))}>
                     <option value="GB">GB</option>
                     <option value="TB">TB</option>
@@ -337,7 +343,10 @@ export default function AdminDashboard() {
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-slate-300 mb-1">Laptop Size (inches)</label>
-                <input type="number" required min="0.1" step="0.1" className="input" placeholder="e.g. 15.6" value={form.size_inches} onChange={e => setForm(p => ({ ...p, size_inches: e.target.value }))} />
+                <input type="text" inputMode="decimal" required className="input" list="size-options" placeholder="e.g. 15.6" value={form.size_inches} onChange={e => setForm(p => ({ ...p, size_inches: e.target.value }))} />
+                <datalist id="size-options">
+                  <option value="13.3" /><option value="13.6" /><option value="14.0" /><option value="14.5" /><option value="15.3" /><option value="15.6" /><option value="16.0" /><option value="16.6" /><option value="17.3" />
+                </datalist>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Stock</label>
