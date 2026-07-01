@@ -7,15 +7,16 @@ const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer'];
 const EMPTY_FORM = { name: '', brand: 'Dell', price: '', cpu: '', ram_gb: '', storage_gb: '', storage_unit: 'GB', gpu: '', size_inches: '', stock: '', image: '', image2: '', image3: '' };
 
 export default function AdminDashboard() {
-  const [tab, setTab]         = useState('products');
-  const [products, setProds]  = useState([]);
-  const [orders, setOrders]   = useState([]);
-  const [stats, setStats]     = useState(null);
-  const [showForm, setShowF]  = useState(false);
-  const [editProd, setEditP]  = useState(null);
-  const [form, setForm]       = useState(EMPTY_FORM);
-  const [loading, setLoading] = useState(false);
+  const [tab, setTab]           = useState('products');
+  const [products, setProds]    = useState([]);
+  const [orders, setOrders]     = useState([]);
+  const [stats, setStats]       = useState(null);
+  const [showForm, setShowF]    = useState(false);
+  const [editProd, setEditP]    = useState(null);
+  const [form, setForm]         = useState(EMPTY_FORM);
+  const [loading, setLoading]   = useState(false);
   const [formError, setFormErr] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   const fetchAll = useCallback(async () => {
     const [pRes, oRes, sRes] = await Promise.all([
@@ -56,13 +57,22 @@ export default function AdminDashboard() {
     } finally { setLoading(false); }
   };
 
-  const handleDelete = async (id, name) => {
-    if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  const handleDelete = async () => {
+    const target = confirmDelete;
+    if (!target) return;
+    setConfirmDelete(null);
+
+    const previous = products;
+    setProds(prev => prev.filter(p => p.id !== target.id));
+
     try {
-      await api.delete(`/products/${id}`);
-      toast.success('Product deleted');
-      await fetchAll();
-    } catch { toast.error('Failed to delete product'); }
+      await api.delete(`/products/${target.id}`);
+      toast.success('Product deleted successfully');
+    } catch (err) {
+      setProds(previous);
+      const msg = err.response?.data?.message || 'Failed to delete product';
+      toast.error(msg);
+    }
   };
 
   const handleStatusChange = async (orderId, status) => {
@@ -153,7 +163,7 @@ export default function AdminDashboard() {
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <button onClick={() => openEdit(p)} className="text-xs btn-secondary py-1 px-3">Edit</button>
-                        <button onClick={() => handleDelete(p.id, p.name)} className="text-xs btn-danger py-1 px-3">Delete</button>
+                        <button onClick={() => setConfirmDelete(p)} className="text-xs btn-danger py-1 px-3">Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -280,6 +290,22 @@ export default function AdminDashboard() {
                 <button type="button" onClick={() => setShowF(false)} className="btn-secondary flex-1 py-2.5">Cancel</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Delete Modal */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="card w-full max-w-md p-6">
+            <h2 className="font-display text-2xl font-bold uppercase text-slate-50 mb-2">Delete Product</h2>
+            <p className="text-slate-300 text-sm mb-6">
+              Are you sure you want to delete <span className="font-semibold text-slate-100">{confirmDelete.name}</span>? This cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={handleDelete} className="btn-danger flex-1 py-2.5">Confirm Delete</button>
+              <button onClick={() => setConfirmDelete(null)} className="btn-secondary flex-1 py-2.5">Cancel</button>
+            </div>
           </div>
         </div>
       )}
