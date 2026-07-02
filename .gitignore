@@ -6,6 +6,8 @@ build/
 .DS_Store
 *.log
 graphify-out/
+.vscode/
+DEPLOYMENT_CHECKLIST.md
 backend/logs/
 backend/
 database/
