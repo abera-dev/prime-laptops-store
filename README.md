@@ -191,41 +191,6 @@ prime-laptops-store/
 | `/api/ready` | Readiness check |
 | `/api/metrics` | Prometheus metrics |
 
-## ⚙️ Environment Variables
-
-### Backend (.env)
-
-```env
-# Server
-PORT=5000
-NODE_ENV=development
-
-# Database
-DATABASE_URL=postgresql://username:password@host:5432/database_name
-
-# JWT
-JWT_SECRET=your_jwt_secret_key_here
-JWT_EXPIRES_IN=15m
-REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
-REFRESH_TOKEN_EXPIRES_IN=7d
-
-# CORS
-FRONTEND_URL=http://localhost:3000
-
-# Email (for notifications)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your_email@example.com
-SMTP_PASS=your_email_password
-EMAIL_FROM=noreply@primelaptops.com
-
-# Logging
-LOG_LEVEL=info
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-```
 
 ## 🚀 Local Setup
 
