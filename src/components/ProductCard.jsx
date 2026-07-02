@@ -89,13 +89,14 @@ function ProductCard({ product }) {
         {/* Specs */}
         <div className="grid grid-cols-2 gap-1 mb-3">
           {[
-            { icon: '🔲', label: product.cpu.split(' ').slice(0, 3).join(' ') },
-            { icon: '💾', label: `${product.ram_gb}GB RAM` },
-            { icon: '💽', label: `${product.storage_gb} SSD` },
-            { icon: '🎮', label: product.gpu.split(' ').slice(-2).join(' ') },
+            { icon: '🔲', label: product.cpu.split(' ').slice(0, 3).join(' '), title: product.cpu },
+            { icon: '💾', label: `${product.ram_gb}GB RAM`, title: `${product.ram_gb}GB RAM` },
+            { icon: '💽', label: `${product.storage_gb} SSD`, title: `${product.storage_gb} SSD` },
+            { icon: '🎮', label: product.gpu.split(' ').slice(-2).join(' '), title: product.gpu },
           ].map((spec, i) => (
-            <span key={i} className="tech-spec flex items-center gap-1">
-              {spec.icon} {spec.label}
+            <span key={i} className="tech-spec flex items-center gap-1 overflow-hidden">
+              <span className="shrink-0">{spec.icon}</span>
+              <span className="truncate max-w-[120px]" title={spec.title}>{spec.label}</span>
             </span>
           ))}
         </div>
