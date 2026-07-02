@@ -101,6 +101,19 @@ function ProductCard({ product }) {
           ))}
         </div>
 
+        {/* Rating */}
+        <div className="flex items-center gap-1.5 mb-1">
+          {product.review_count > 0 ? (
+            <>
+              <span className="text-amber-400 text-sm">★</span>
+              <span className="text-sm text-slate-300 font-medium">{Number(product.avg_rating).toFixed(1)}</span>
+              <span className="text-xs text-slate-500">({product.review_count})</span>
+            </>
+          ) : (
+            <span className="text-xs text-slate-600">No reviews</span>
+          )}
+        </div>
+
         <div className="mt-auto flex items-center justify-between">
           <span className="tech-price text-xl">${product.price.toLocaleString()}</span>
           <span className="font-mono text-xs text-slate-500">{product.stock > 0 ? `${product.stock} left` : 'Sold out'}</span>
