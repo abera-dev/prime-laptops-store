@@ -17,7 +17,6 @@ Prime Laptops Store is a comprehensive e-commerce solution for multi-brand lapto
 ## 🌐 Live Links
 
 - **Frontend:** [https://prime-laptops-store.vercel.app](https://prime-laptops-store.vercel.app)
-- **Backend API:** [https://prime-laptops-store.onrender.com](https://prime-laptops-store.onrender.com)
 
 ## 🛠️ Tech Stack
 
@@ -153,7 +152,7 @@ prime-laptops-store/
 | GET | `/brands` | Public | Get all available brands |
 | POST | `/:id/reviews` | JWT | Add product review |
 
-**Filters:** `?brand=Apple&ram_gb=16&storage_gb=512&min_price=500&max_price=2000&search=macbook&page=1&limit=20`
+
 
 ### Cart (`/api/cart`) - All require JWT
 | Method | Endpoint | Description |
@@ -173,119 +172,32 @@ prime-laptops-store/
 | PUT | `/:id/status` | Admin | Update order status |
 | GET | `/stats` | Admin | Get order statistics |
 
-### Settings (`/api/settings`) - All require Admin
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET/PUT | `/profile` | Admin profile management |
-| PUT | `/password` | Change admin password |
-| GET/PUT | `/store` | Store settings |
-| GET/PUT | `/preferences` | Admin preferences |
-| GET | `/activity` | Activity logs |
-| GET | `/sessions` | Active sessions |
-| GET | `/system` | System information |
-
-### Health & Monitoring
-| Endpoint | Description |
-|----------|-------------|
-| `/api/health` | Health check |
-| `/api/ready` | Readiness check |
-| `/api/metrics` | Prometheus metrics |
-
 
 ## 🚀 Local Setup
-
-### Prerequisites
-- Node.js (v18 or higher)
-- PostgreSQL (local or Neon account)
-- Git
-
-### Step 1: Clone Repositories
-
+ 
+**1. Clone**
 ```bash
-# Clone frontend
 git clone https://github.com/abera-dev/prime-laptops-store.git
 cd prime-laptops-store
-
-# Clone backend (in separate terminal or directory)
-git clone https://github.com/abera-dev/prime-laptops-store-backend.git
 ```
-
-### Step 2: Setup Database
-
-**Option A: Using Neon (Recommended)**
-1. Create account at [neon.tech](https://neon.tech)
-2. Create new project
-3. Copy connection string
-
-**Option B: Local PostgreSQL**
+ 
+**2. Install Dependencies**
 ```bash
-# Create database
-psql -U postgres -c "CREATE DATABASE laptop_store;"
-```
-
-### Step 3: Run Migrations
-
-```bash
-# Navigate to database directory
-cd database
-
-# Run migrations in order
-psql -U postgres -d laptop_store -f 01_create_users.sql
-psql -U postgres -d laptop_store -f 02_create_products.sql
-psql -U postgres -d laptop_store -f 03_create_cart.sql
-psql -U postgres -d laptop_store -f 04_create_orders.sql
-# ... continue for all migration files
-
-# Or if using a single schema file:
-psql -U postgres -d laptop_store -f schema.sql
-
-# Seed data (optional)
-psql -U postgres -d laptop_store -f seeds.sql
-```
-
-### Step 4: Configure Environment Variables
-
-**Backend:**
-```bash
-cd prime-laptops-store-backend
-cp .env.example .env
-# Edit .env with your database URL and secrets
-```
-
-**Frontend:**
-```bash
-cd prime-laptops-store
-cp .env.example .env
-# Configure API endpoint if needed
-```
-
-### Step 5: Install Dependencies
-
-```bash
-# Backend
-cd prime-laptops-store-backend
-npm install
-
-# Frontend (new terminal)
-cd prime-laptops-store
 npm install
 ```
-
-### Step 6: Run Development Servers
-
-**Terminal 1 - Backend:**
-```bash
-cd prime-laptops-store-backend
-npm run dev
-# Backend runs on http://localhost:5000
+ 
+**3. Environment Variables**
+ 
+Create a `.env` file:
+```env
+REACT_APP_API_URL=your_backend_api_url
 ```
-
-**Terminal 2 - Frontend:**
+ 
+**4. Run Dev Server**
 ```bash
-cd prime-laptops-store
 npm start
-# Frontend runs on http://localhost:3000
 ```
+ 
 
 ## 📸 Screenshots
 
@@ -299,40 +211,9 @@ npm start
 ![Dark Mode](screenshots/dark-mode.png)
 -->
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-- Follow existing code style and conventions
-- Write clear commit messages
-- Test your changes before submitting
-- Update documentation if needed
 
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
 
-- Thanks to all contributors who have helped shape this project
-- Built with ❤️ using modern web technologies
-
-## 📞 Contact
-
-**Abera Dev** - [GitHub](https://github.com/abera-dev)
-
-Project Links:
-- [Frontend Repository](https://github.com/abera-dev/prime-laptops-store)
-- [Backend Repository](https://github.com/abera-dev/prime-laptops-store-backend)
-- [Live Demo](https://prime-laptops-store.vercel.app)
-
----
-
-⭐ If you found this project helpful, please give it a star on GitHub!
