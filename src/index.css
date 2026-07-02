@@ -74,10 +74,6 @@ html, body {
   .tech-price {
     @apply font-mono font-medium text-cyan;
   }
-  .tech-spec {
-    @apply font-mono text-xs text-slate-400;
-  }
-
   .theme-toggle {
     @apply inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-cyan shadow-lg shadow-black/10 backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan/50 hover:bg-cyan/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-night;
   }
@@ -196,8 +192,7 @@ html[data-theme='light'] .theme-toggle {
   box-shadow: 0 12px 30px rgba(29, 127, 255, 0.12);
 }
 
-html[data-theme='light'] .tech-price,
-html[data-theme='light'] .tech-spec {
+html[data-theme='light'] .tech-price {
   color: #006adc;
 }
 
