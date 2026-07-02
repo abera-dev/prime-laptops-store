@@ -75,7 +75,6 @@ export default function ProductDetail() {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (!confirm('Delete this review?')) return;
     try {
       await api.delete(`/products/${id}/reviews/${reviewId}`);
       setReviews(prev => prev.filter(r => r.id !== reviewId));
