@@ -93,7 +93,7 @@ function ProductCard({ product }) {
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
         <Link to={`/products/${product.id}`}>
-          <h3 className="font-display text-xl font-bold leading-tight text-slate-50 hover:text-cyan transition-colors mb-2 line-clamp-2">
+          <h3 className="font-display text-xl font-bold leading-tight text-gray-900 dark:text-slate-50 hover:text-cyan transition-colors mb-2 line-clamp-2">
             {product.name}
           </h3>
         </Link>
@@ -106,7 +106,7 @@ function ProductCard({ product }) {
             { icon: '💽', label: `${product.storage_gb} SSD`, title: `${product.storage_gb} SSD` },
             { icon: '🎮', label: product.gpu.split(' ').slice(-2).join(' '), title: product.gpu },
           ].map((spec, i) => (
-            <span key={i} className="flex items-center gap-1 overflow-hidden text-gray-200 text-xs">
+            <span key={i} className="flex items-center gap-1 overflow-hidden text-gray-600 dark:text-gray-300 text-xs">
               <span className="shrink-0">{spec.icon}</span>
               <span className="truncate max-w-[120px]" title={spec.title}>{spec.label}</span>
             </span>
@@ -118,11 +118,11 @@ function ProductCard({ product }) {
           {product.review_count > 0 ? (
             <>
               <span className="text-amber-400 text-sm">★</span>
-              <span className="text-sm text-slate-300 font-medium">{Number(product.avg_rating).toFixed(1)}</span>
-              <span className="text-xs text-slate-500">({product.review_count})</span>
+              <span className="text-sm text-gray-600 dark:text-slate-300 font-medium">{Number(product.avg_rating).toFixed(1)}</span>
+              <span className="text-xs text-gray-500 dark:text-slate-500">({product.review_count})</span>
             </>
           ) : (
-            <span className="text-xs text-slate-600">No reviews</span>
+            <span className="text-xs text-gray-500 dark:text-slate-600">No reviews</span>
           )}
         </div>
 
@@ -136,7 +136,7 @@ function ProductCard({ product }) {
           disabled={product.stock === 0}
           className={`w-full mt-3 text-sm py-2 rounded-lg font-semibold transition-colors ${
             product.stock === 0
-              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
               : 'bg-cyan/90 text-white hover:bg-cyan'
           }`}
         >
