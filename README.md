@@ -201,15 +201,11 @@ npm start
 
 ## 📸 Screenshots
 
-<!-- Add your screenshots here -->
-<!--
-![Home Page](screenshots/home.png)
-![Product Catalog](screenshots/products.png)
-![Product Detail](screenshots/product-detail.png)
-![Shopping Cart](screenshots/cart.png)
-![Admin Dashboard](screenshots/admin.png)
-![Dark Mode](screenshots/dark-mode.png)
--->
+![Home Page](src/assets/home.png)
+*Home page with hero section and product listing*
+
+![Product Catalog](src/assets/products.png)
+*Product catalog with filters, search, and grid view*
 
 
 ## 📝 License
