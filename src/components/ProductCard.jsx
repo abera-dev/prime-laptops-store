@@ -106,7 +106,7 @@ function ProductCard({ product }) {
             { icon: '💽', label: `${product.storage_gb} SSD`, title: `${product.storage_gb} SSD` },
             { icon: '🎮', label: product.gpu.split(' ').slice(-2).join(' '), title: product.gpu },
           ].map((spec, i) => (
-            <span key={i} className="flex items-center gap-1 overflow-hidden text-gray-600 dark:text-gray-300 text-xs">
+            <span key={i} className="flex items-center gap-1 overflow-hidden text-gray-800 dark:text-gray-200 text-xs">
               <span className="shrink-0">{spec.icon}</span>
               <span className="truncate max-w-[120px]" title={spec.title}>{spec.label}</span>
             </span>
