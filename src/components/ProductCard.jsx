@@ -21,33 +21,45 @@ function ProductCard({ product }) {
     }
   };
 
-  /* ── Brand badge color lookup — case-insensitive ──
-    First tries an exact match (fast path), then falls back to a
-    case-insensitive scan so "lenovo", "LENOVO", "Dell ", etc.
-    still get branded colors. Unknown or empty brands get a neutral
-    white/slate fallback.                                   */
   const BRAND_COLORS = {
-    Dell:   'border-electric/40 bg-electric/15 text-cyan',
-    HP:     'border-cyan/40 bg-cyan/10 text-cyan',
-    Lenovo: 'border-rose-400/40 bg-rose-500/10 text-rose-200',
-    Apple:  'border-slate-300/30 bg-white/10 text-slate-200',
-    ASUS:   'border-amber-300/40 bg-amber-400/10 text-amber-200',
-    Acer:   'border-emerald-300/40 bg-emerald-400/10 text-emerald-200',
+    Dell:      'bg-blue-600',
+    HP:        'bg-indigo-600',
+    Apple:     'bg-gray-600',
+    Lenovo:    'bg-red-600',
+    ASUS:      'bg-purple-600',
+    Acer:      'bg-green-600',
+    Microsoft: 'bg-teal-600',
   };
 
   function brandBadgeColor(brand) {
-    if (!brand) return 'border-white/10 bg-white/10 text-slate-200';
+    if (!brand) return 'bg-cyan-600';
     const b = brand.trim();
     if (BRAND_COLORS[b]) return BRAND_COLORS[b];
     const key = Object.keys(BRAND_COLORS).find(
       k => k.toLowerCase() === b.toLowerCase()
     );
-    return key ? BRAND_COLORS[key] : 'border-white/10 bg-white/10 text-slate-200';
+    return key ? BRAND_COLORS[key] : 'bg-cyan-600';
   }
 
   const brandColor = brandBadgeColor(product.brand);
   const badgeText = product.brand || '—';
   const isNew = new Date() - new Date(product.created_at) < 28 * 24 * 60 * 60 * 1000;
+
+  const stockLabel = product.stock === 0
+    ? 'Out of Stock'
+    : product.stock <= 5
+      ? `Only ${product.stock} left!`
+      : product.stock <= 10
+        ? `${product.stock} left`
+        : `${product.stock} in stock`;
+
+  const stockColor = product.stock === 0
+    ? 'text-red-400'
+    : product.stock <= 5
+      ? 'text-red-400'
+      : product.stock <= 10
+        ? 'text-orange-400'
+        : 'text-gray-400';
 
   return (
     <div className="card group relative flex min-h-[382px] flex-col transition-all duration-200 hover:-translate-y-1 hover:border-cyan/35 hover:shadow-cyan/10">
@@ -63,11 +75,11 @@ function ProductCard({ product }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           onError={(e) => { e.target.src = 'https://via.placeholder.com/400x300?text=Laptop'; }}
         />
-        <span className={`absolute top-2 left-2 badge ${brandColor}`}>
+        <span className={`absolute top-2 left-2 rounded px-2 py-0.5 text-xs font-bold text-white ${brandColor}`}>
           {badgeText}
         </span>
         {isNew && (
-          <span className="absolute top-2 right-2 rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-bold text-white shadow-sm">
+          <span className="absolute top-2 right-2 rounded-full bg-emerald-400 px-2 py-0.5 text-xs font-bold text-white shadow-lg">
             NEW
           </span>
         )}
@@ -94,7 +106,7 @@ function ProductCard({ product }) {
             { icon: '💽', label: `${product.storage_gb} SSD`, title: `${product.storage_gb} SSD` },
             { icon: '🎮', label: product.gpu.split(' ').slice(-2).join(' '), title: product.gpu },
           ].map((spec, i) => (
-            <span key={i} className="tech-spec flex items-center gap-1 overflow-hidden">
+            <span key={i} className="flex items-center gap-1 overflow-hidden text-gray-200 text-xs">
               <span className="shrink-0">{spec.icon}</span>
               <span className="truncate max-w-[120px]" title={spec.title}>{spec.label}</span>
             </span>
@@ -116,13 +128,17 @@ function ProductCard({ product }) {
 
         <div className="mt-auto flex items-center justify-between">
           <span className="tech-price text-xl">${product.price.toLocaleString()}</span>
-          <span className="font-mono text-xs text-slate-500">{product.stock > 0 ? `${product.stock} left` : 'Sold out'}</span>
+          <span className={`font-mono text-xs ${stockColor}`}>{stockLabel}</span>
         </div>
 
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className="btn-primary w-full mt-3 text-sm"
+          className={`w-full mt-3 text-sm py-2 rounded-lg font-semibold transition-colors ${
+            product.stock === 0
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              : 'bg-cyan/90 text-white hover:bg-cyan'
+          }`}
         >
           {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
         </button>
